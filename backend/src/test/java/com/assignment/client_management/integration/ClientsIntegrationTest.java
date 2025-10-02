@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class ClientsIntegrationTest {
+
+    private static final Long ID = 1L;
     private static final String FULL_NAME = "John Doe";
     private static final String DISPLAY_NAME = "JD";
     private static final String EMAIL = "john@doe.com";
@@ -51,15 +53,12 @@ public class ClientsIntegrationTest {
 
         assertEquals(1, clients.length);
         ClientResponse actual = clients[0];
-        ClientResponse expected = createExpectedClientResponse();
-
-        assertEquals(expected, actual);
-    }
-
-    private ClientResponse createExpectedClientResponse() {
-        return new ClientResponse(
-                FULL_NAME, DISPLAY_NAME, EMAIL, DETAILS, ACTIVE, LOCATION
-        );
+        assertEquals(FULL_NAME, actual.fullName());
+        assertEquals(DISPLAY_NAME, actual.displayName());
+        assertEquals(EMAIL, actual.email());
+        assertEquals(DETAILS, actual.details());
+        assertEquals(ACTIVE, actual.active());
+        assertEquals(LOCATION, actual.location());
     }
 
     private void insertClientRecord() {

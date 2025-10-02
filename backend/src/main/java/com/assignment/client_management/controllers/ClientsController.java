@@ -30,6 +30,7 @@ public class ClientsController {
         return ResponseEntity.ok(clientsResponse);
     }
 
+
     //TODO api to fetch a specific client by id
     //TODO PATCH api to modify data.
     //TODO delete api for a certain client

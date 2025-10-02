@@ -30,6 +30,6 @@ class ClientsControllerMapperTest {
     }
 
     private ClientResponse createExpectedClientResponse() {
-        return new ClientResponse(FULL_NAME, DISPLAY_NAME, EMAIL, DETAILS, ACTIVE, LOCATION);
+        return new ClientResponse(ID, FULL_NAME, DISPLAY_NAME, EMAIL, DETAILS, ACTIVE, LOCATION);
     }
 }

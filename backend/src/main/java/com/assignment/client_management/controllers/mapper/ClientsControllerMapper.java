@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class ClientsControllerMapper {
     public ClientResponse toClientResponse(Client client) {
         return new ClientResponse(
+                client.id(),
                 client.fullName(),
                 client.displayName(),
                 client.email(),
