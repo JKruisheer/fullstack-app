@@ -7,19 +7,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ClientsServiceMapper {
-    public ClientInformation toClient(ClientEntity entity) {
+    public ClientInformation toClientInformation(final ClientEntity clientEntity) {
         return new ClientInformation(
-                entity.getId(),
-                entity.getFullName(),
-                entity.getDisplayName(),
-                entity.getEmail(),
-                entity.getDetails(),
-                entity.isActive(),
-                entity.getLocation()
+                clientEntity.getId(),
+                clientEntity.getFullName(),
+                clientEntity.getDisplayName(),
+                clientEntity.getEmail(),
+                clientEntity.getDetails(),
+                clientEntity.isActive(),
+                clientEntity.getLocation()
         );
     }
 
-    public ClientEntity toClientEntity(NewClient newClient) {
+    public ClientEntity toClientEntity(final NewClient newClient) {
         ClientEntity clientEntity = new ClientEntity();
         clientEntity.setFullName(newClient.fullName());
         clientEntity.setDisplayName(newClient.displayName());

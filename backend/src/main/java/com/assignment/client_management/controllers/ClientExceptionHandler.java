@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ClientExceptionHandler {
 
     @ExceptionHandler(UnknownClientException.class)
-    public ResponseEntity<String> handleUnknownClient(UnknownClientException ex) {
+    public ResponseEntity<String> handleUnknownClientException(final UnknownClientException ex) {
         return ResponseEntity.status(404).body(ex.getMessage());
     }
 }

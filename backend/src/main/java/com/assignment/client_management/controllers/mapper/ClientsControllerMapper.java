@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ClientsControllerMapper {
-    public ClientResponse toClientResponse(ClientInformation clientInformation) {
+    public ClientResponse toClientResponse(final ClientInformation clientInformation) {
         return new ClientResponse(
                 clientInformation.id(),
                 clientInformation.fullName(),
@@ -22,7 +22,7 @@ public class ClientsControllerMapper {
         );
     }
 
-    public NewClient toNewClient(NewClientRequest newClientRequest) {
+    public NewClient toNewClient(final NewClientRequest newClientRequest) {
         return new NewClient(
                 newClientRequest.fullName(),
                 newClientRequest.displayName(),
@@ -33,7 +33,7 @@ public class ClientsControllerMapper {
         );
     }
 
-    public UpdateClientInformation toUpdateClientInformation(PatchClientRequest patchClientRequest) {
+    public UpdateClientInformation toUpdateClientInformation(final PatchClientRequest patchClientRequest) {
         return new UpdateClientInformation(
                 patchClientRequest.displayName(),
                 patchClientRequest.details(),

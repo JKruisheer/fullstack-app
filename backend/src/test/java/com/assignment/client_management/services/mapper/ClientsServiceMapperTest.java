@@ -20,8 +20,8 @@ class ClientsServiceMapperTest {
     private final ClientsServiceMapper clientsServiceMapper = new ClientsServiceMapper();
 
     @Test
-    void testToClient() {
-        ClientInformation actual = clientsServiceMapper.toClient(createClientEntity());
+    void testToClientInformation() {
+        ClientInformation actual = clientsServiceMapper.toClientInformation(createClientEntity());
         ClientInformation expected = createExpectedClient();
         assertEquals(expected, actual);
     }

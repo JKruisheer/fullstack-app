@@ -37,20 +37,20 @@ class ClientsServiceTest {
     private ClientsService clientsService;
 
     @Test
-    void testGetAllClientsShouldReturnMappedClients() {
+    void testGetClientsShouldReturnMappedClients() {
         ClientEntity mockedEntity = mock(ClientEntity.class);
         when(clientsRepository.findAll()).thenReturn(List.of(mockedEntity));
 
         ClientInformation mockedClientInformation = mock(ClientInformation.class);
-        when(clientsServiceMapper.toClient(mockedEntity)).thenReturn(mockedClientInformation);
+        when(clientsServiceMapper.toClientInformation(mockedEntity)).thenReturn(mockedClientInformation);
 
-        List<ClientInformation> actual = clientsService.getAllClients();
+        List<ClientInformation> actual = clientsService.getClients();
 
         assertEquals(1, actual.size());
         assertEquals(mockedClientInformation, actual.get(0));
 
         verify(clientsRepository, times(1)).findAll();
-        verify(clientsServiceMapper, times(1)).toClient(mockedEntity);
+        verify(clientsServiceMapper, times(1)).toClientInformation(mockedEntity);
     }
 
     @Test
@@ -70,14 +70,14 @@ class ClientsServiceTest {
         when(clientsRepository.findById(ID)).thenReturn(Optional.of(mockedEntity));
 
         ClientInformation mockedClientInformation = mock(ClientInformation.class);
-        when(clientsServiceMapper.toClient(mockedEntity)).thenReturn(mockedClientInformation);
+        when(clientsServiceMapper.toClientInformation(mockedEntity)).thenReturn(mockedClientInformation);
 
         ClientInformation actual = clientsService.getClientById(ID);
 
         assertEquals(mockedClientInformation, actual);
 
         verify(clientsRepository, times(1)).findById(ID);
-        verify(clientsServiceMapper, times(1)).toClient(mockedEntity);
+        verify(clientsServiceMapper, times(1)).toClientInformation(mockedEntity);
     }
 
     @Test

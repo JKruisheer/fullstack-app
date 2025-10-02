@@ -23,8 +23,8 @@ class ClientsControllerMapperTest {
 
     @Test
     void testToClientResponse() {
-        ClientResponse actual = clientsControllerMapper.toClientResponse(createClientInformation());
-        ClientResponse expected = createExpectedClientResponse();
+        final ClientResponse actual = clientsControllerMapper.toClientResponse(createClientInformation());
+        final ClientResponse expected = createExpectedClientResponse();
         assertEquals(expected, actual);
     }
 
@@ -38,8 +38,8 @@ class ClientsControllerMapperTest {
 
     @Test
     void testToNewClient() {
-        NewClient actual = clientsControllerMapper.toNewClient(createNewClientRequest());
-        NewClient expected = createdExpectedNewClient();
+        final NewClient actual = clientsControllerMapper.toNewClient(createNewClientRequest());
+        final NewClient expected = createdExpectedNewClient();
         assertEquals(expected, actual);
     }
 
@@ -53,8 +53,8 @@ class ClientsControllerMapperTest {
 
     @Test
     void testToUpdateClientInformation() {
-        UpdateClientInformation actual = clientsControllerMapper.toUpdateClientInformation(createPatchClientRequest());
-        UpdateClientInformation expected = createExpectedClientInformation();
+        final UpdateClientInformation actual = clientsControllerMapper.toUpdateClientInformation(createPatchClientRequest());
+        final UpdateClientInformation expected = createExpectedClientInformation();
         assertEquals(expected, actual);
     }
 

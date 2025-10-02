@@ -33,26 +33,26 @@ public class ClientsController {
     }
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ClientResponse>> getAllClients() {
+    public ResponseEntity<List<ClientResponse>> getClients() {
         //todo change this because this has to be a cookie
-        List<ClientResponse> clientsResponse = clientsService.getAllClients().stream().map(clientsControllerMapper::toClientResponse).toList();
+        List<ClientResponse> clientsResponse = clientsService.getClients().stream().map(clientsControllerMapper::toClientResponse).toList();
         return ResponseEntity.ok(clientsResponse);
     }
 
     @GetMapping(path = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<ClientResponse> getClientById(@PathVariable("id") Long id) {
+    public ResponseEntity<ClientResponse> getClientById(@PathVariable("id") final Long id) {
         ClientResponse clientResponse = clientsControllerMapper.toClientResponse(clientsService.getClientById(id));
         return ResponseEntity.ok(clientResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClientById(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteClientById(@PathVariable("id") final Long id) {
         clientsService.deleteClientById(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping
-    public ResponseEntity<Void> createClient(@RequestBody NewClientRequest newClientRequest) {
+    public ResponseEntity<Void> createClient(@RequestBody final NewClientRequest newClientRequest) {
         Long id = clientsService.createClient(clientsControllerMapper.toNewClient(newClientRequest));
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -63,7 +63,7 @@ public class ClientsController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Void> updateClient(@PathVariable Long id, @RequestBody PatchClientRequest patchClientRequest) {
+    public ResponseEntity<Void> updateClient(@PathVariable final Long id, @RequestBody final PatchClientRequest patchClientRequest) {
         clientsService.updateClient(id, clientsControllerMapper.toUpdateClientInformation(patchClientRequest));
         return ResponseEntity.noContent().build();
     }

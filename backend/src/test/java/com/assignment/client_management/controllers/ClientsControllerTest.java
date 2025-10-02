@@ -45,14 +45,14 @@ class ClientsControllerTest {
     private ClientsController clientsController;
 
     @Test
-    void getAllClientsShouldReturnMappedClientResponse() {
+    void getClientsShouldReturnMappedClientResponse() {
         ClientInformation mockedClientInformation = mock(ClientInformation.class);
-        when(clientsService.getAllClients()).thenReturn(List.of(mockedClientInformation));
+        when(clientsService.getClients()).thenReturn(List.of(mockedClientInformation));
 
         ClientResponse mockedClientResponse = mock(ClientResponse.class);
         when(clientsControllerMapper.toClientResponse(mockedClientInformation)).thenReturn(mockedClientResponse);
 
-        ResponseEntity<List<ClientResponse>> actual = clientsController.getAllClients();
+        ResponseEntity<List<ClientResponse>> actual = clientsController.getClients();
 
         assertEquals(OK, actual.getStatusCode());
 
@@ -60,7 +60,7 @@ class ClientsControllerTest {
         assertEquals(1, response.size());
         assertEquals(mockedClientResponse, response.get(0));
 
-        verify(clientsService, times(1)).getAllClients();
+        verify(clientsService, times(1)).getClients();
         verify(clientsControllerMapper, times(1)).toClientResponse(mockedClientInformation);
     }
 
