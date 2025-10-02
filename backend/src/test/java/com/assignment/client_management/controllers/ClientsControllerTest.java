@@ -3,9 +3,11 @@ package com.assignment.client_management.controllers;
 import com.assignment.client_management.controllers.mapper.ClientsControllerMapper;
 import com.assignment.client_management.controllers.model.ClientResponse;
 import com.assignment.client_management.controllers.model.NewClientRequest;
+import com.assignment.client_management.controllers.model.PatchClientRequest;
 import com.assignment.client_management.services.ClientsService;
 import com.assignment.client_management.services.model.ClientInformation;
 import com.assignment.client_management.services.model.NewClient;
+import com.assignment.client_management.services.model.UpdateClientInformation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -98,7 +100,6 @@ class ClientsControllerTest {
 
         ResponseEntity<Void> response = clientsController.createClient(request);
 
-        // Assert
         assertEquals(CREATED, response.getStatusCode());
         assertNotNull(response.getHeaders().getLocation());
         assertTrue(response.getHeaders().getLocation().toString().endsWith("/" + ID));
@@ -110,5 +111,18 @@ class ClientsControllerTest {
     private void mockHttpServlet() {
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+    }
+
+    @Test
+    void updateClientShouldCallService() {
+        PatchClientRequest patchClientRequestMock = mock(PatchClientRequest.class);
+        UpdateClientInformation updateClientInformationMock = mock(UpdateClientInformation.class);
+        when(clientsControllerMapper.toUpdateClientInformation(patchClientRequestMock)).thenReturn(updateClientInformationMock);
+
+        ResponseEntity<Void> response = clientsController.updateClient(ID, patchClientRequestMock);
+        assertEquals(NO_CONTENT, response.getStatusCode());
+
+        verify(clientsControllerMapper, times(1)).toUpdateClientInformation(patchClientRequestMock);
+        verify(clientsService, times(1)).updateClient(ID, updateClientInformationMock);
     }
 }

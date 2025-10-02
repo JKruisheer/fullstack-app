@@ -2,8 +2,10 @@ package com.assignment.client_management.controllers.mapper;
 
 import com.assignment.client_management.controllers.model.ClientResponse;
 import com.assignment.client_management.controllers.model.NewClientRequest;
+import com.assignment.client_management.controllers.model.PatchClientRequest;
 import com.assignment.client_management.services.model.ClientInformation;
 import com.assignment.client_management.services.model.NewClient;
+import com.assignment.client_management.services.model.UpdateClientInformation;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,6 +30,15 @@ public class ClientsControllerMapper {
                 newClientRequest.details(),
                 newClientRequest.active(),
                 newClientRequest.location()
+        );
+    }
+
+    public UpdateClientInformation toUpdateClientInformation(PatchClientRequest patchClientRequest) {
+        return new UpdateClientInformation(
+                patchClientRequest.displayName(),
+                patchClientRequest.details(),
+                patchClientRequest.active(),
+                patchClientRequest.location()
         );
     }
 }

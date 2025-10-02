@@ -2,8 +2,10 @@ package com.assignment.client_management.controllers.mapper;
 
 import com.assignment.client_management.controllers.model.ClientResponse;
 import com.assignment.client_management.controllers.model.NewClientRequest;
+import com.assignment.client_management.controllers.model.PatchClientRequest;
 import com.assignment.client_management.services.model.ClientInformation;
 import com.assignment.client_management.services.model.NewClient;
+import com.assignment.client_management.services.model.UpdateClientInformation;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,5 +49,20 @@ class ClientsControllerMapperTest {
 
     private NewClientRequest createNewClientRequest() {
         return new NewClientRequest(FULL_NAME, DISPLAY_NAME, EMAIL, DETAILS, ACTIVE, LOCATION);
+    }
+
+    @Test
+    void testToUpdateClientInformation() {
+        UpdateClientInformation actual = clientsControllerMapper.toUpdateClientInformation(createPatchClientRequest());
+        UpdateClientInformation expected = createExpectedClientInformation();
+        assertEquals(expected, actual);
+    }
+
+    private PatchClientRequest createPatchClientRequest() {
+        return new PatchClientRequest(DISPLAY_NAME, DETAILS, ACTIVE, LOCATION);
+    }
+
+    private UpdateClientInformation createExpectedClientInformation() {
+        return new UpdateClientInformation(DISPLAY_NAME, DETAILS, ACTIVE, LOCATION);
     }
 }

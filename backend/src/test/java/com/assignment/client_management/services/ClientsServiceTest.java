@@ -6,6 +6,7 @@ import com.assignment.client_management.repositories.ClientsRepository;
 import com.assignment.client_management.services.mapper.ClientsServiceMapper;
 import com.assignment.client_management.services.model.ClientInformation;
 import com.assignment.client_management.services.model.NewClient;
+import com.assignment.client_management.services.model.UpdateClientInformation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -116,5 +117,35 @@ class ClientsServiceTest {
 
         verify(clientsRepository, times(1)).save(clientEntityMock);
         verify(clientsServiceMapper, times(1)).toClientEntity(newClientMock);
+    }
+
+    @Test
+    void testUpdateClientShouldThrowIfClientNotFound() {
+        UpdateClientInformation mockedUpdateClientInformation = mock(UpdateClientInformation.class);
+        when(clientsRepository.findById(ID)).thenReturn(Optional.empty());
+
+        var exception = assertThrows(UnknownClientException.class, () -> clientsService.updateClient(ID, mockedUpdateClientInformation));
+
+        assertEquals("Client with id 1 not found", exception.getMessage());
+
+        verify(clientsRepository, times(1)).findById(ID);
+    }
+
+    @Test
+    void testUpdateClientShouldUpdateTheEntity() {
+        ClientEntity clientEntityMock = mock(ClientEntity.class);
+        when(clientsRepository.findById(ID)).thenReturn(Optional.of(clientEntityMock));
+
+        UpdateClientInformation updateClientInformation = new UpdateClientInformation("Display name", "details", false, "Utrecht");
+
+        clientsService.updateClient(ID, updateClientInformation);
+
+        verify(clientEntityMock).setDisplayName(updateClientInformation.displayName());
+        verify(clientEntityMock).setDetails(updateClientInformation.details());
+        verify(clientEntityMock).setActive(updateClientInformation.active());
+        verify(clientEntityMock).setLocation(updateClientInformation.location());
+
+        verify(clientsRepository, times(1)).findById(ID);
+        verify(clientsRepository, times(1)).save(clientEntityMock);
     }
 }

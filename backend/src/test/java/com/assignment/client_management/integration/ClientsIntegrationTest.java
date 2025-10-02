@@ -2,6 +2,7 @@ package com.assignment.client_management.integration;
 
 import com.assignment.client_management.controllers.model.ClientResponse;
 import com.assignment.client_management.controllers.model.NewClientRequest;
+import com.assignment.client_management.controllers.model.PatchClientRequest;
 import com.assignment.client_management.entities.ClientEntity;
 import com.assignment.client_management.repositories.ClientsRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +21,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -131,12 +134,35 @@ public class ClientsIntegrationTest {
                 Void.class
         );
 
-        assertEquals(201, response.getStatusCodeValue());
+        assertEquals(CREATED, response.getStatusCode());
         URI uri = response.getHeaders().getLocation();
         assertNotNull(uri);
 
         ResponseEntity<ClientResponse> createdClient = restTemplate.getForEntity(uri.getPath(), ClientResponse.class);
         assertNotNull(createdClient.getBody());
+    }
+
+    @Test
+    void updateClientShouldUpdateTheFields() {
+        ClientEntity entity = insertClientRecord();
+        PatchClientRequest patchClientRequest = new PatchClientRequest("New display name", "new details", false, "Secret location");
+        HttpEntity<PatchClientRequest> requestEntity = new HttpEntity<>(patchClientRequest);
+
+        ResponseEntity<Void> response = restTemplate.exchange(
+                "/clients/" + entity.getId(),
+                HttpMethod.PATCH,
+                requestEntity,
+                Void.class
+        );
+
+        assertEquals(NO_CONTENT, response.getStatusCode());
+
+        ClientEntity updatedEntity = clientsRepository.findById(entity.getId()).get();
+
+        assertEquals(patchClientRequest.displayName(), updatedEntity.getDisplayName());
+        assertEquals(patchClientRequest.details(), updatedEntity.getDetails());
+        assertEquals(patchClientRequest.active(), updatedEntity.isActive());
+        assertEquals(patchClientRequest.location(), updatedEntity.getLocation());
     }
 
     private ClientEntity insertClientRecord() {

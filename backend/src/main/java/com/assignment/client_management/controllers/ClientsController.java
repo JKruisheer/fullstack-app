@@ -3,10 +3,12 @@ package com.assignment.client_management.controllers;
 import com.assignment.client_management.controllers.mapper.ClientsControllerMapper;
 import com.assignment.client_management.controllers.model.ClientResponse;
 import com.assignment.client_management.controllers.model.NewClientRequest;
+import com.assignment.client_management.controllers.model.PatchClientRequest;
 import com.assignment.client_management.services.ClientsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,5 +62,9 @@ public class ClientsController {
         return ResponseEntity.created(location).build();
     }
 
-    //TODO PATCH api to modify data.
+    @PatchMapping("{id}")
+    public ResponseEntity<Void> updateClient(@PathVariable Long id, @RequestBody PatchClientRequest patchClientRequest) {
+        clientsService.updateClient(id, clientsControllerMapper.toUpdateClientInformation(patchClientRequest));
+        return ResponseEntity.noContent().build();
+    }
 }
