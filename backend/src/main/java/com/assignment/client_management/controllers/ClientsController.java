@@ -5,6 +5,7 @@ import com.assignment.client_management.controllers.model.ClientResponse;
 import com.assignment.client_management.services.ClientsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,7 +16,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping("/clients")
 public class ClientsController {
-
     private final ClientsService clientsService;
     private final ClientsControllerMapper clientsControllerMapper;
 
@@ -26,15 +26,17 @@ public class ClientsController {
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ClientResponse>> getAllClients() {
-        var clientsResponse = clientsService.getAllClients().stream().map(clientsControllerMapper::toClientResponse).toList();
+        List<ClientResponse> clientsResponse = clientsService.getAllClients().stream().map(clientsControllerMapper::toClientResponse).toList();
         return ResponseEntity.ok(clientsResponse);
     }
 
+    @GetMapping(path = "/{id}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<ClientResponse> getClientById(@PathVariable("id") Long id) {
+        ClientResponse clientResponse = clientsControllerMapper.toClientResponse(clientsService.getClientById(id));
+        return ResponseEntity.ok(clientResponse);
+    }
 
-    //TODO api to fetch a specific client by id
+    //TODO POST API to add a new user
     //TODO PATCH api to modify data.
     //TODO delete api for a certain client
-
-    //TODO CREATE A PROBLEM IF IT DOES NOT MATCH
-
 }

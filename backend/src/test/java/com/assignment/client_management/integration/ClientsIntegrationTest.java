@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -61,7 +62,31 @@ public class ClientsIntegrationTest {
         assertEquals(LOCATION, actual.location());
     }
 
-    private void insertClientRecord() {
+    @Test
+    void getClientByIdReturnsNotFound() {
+        Long unknownId = 99L;
+        ResponseEntity<String> response = restTemplate.getForEntity("/clients/" + unknownId, String.class);
+
+        assertEquals(NOT_FOUND, response.getStatusCode());
+        assertEquals(String.format("Client with id %d not found", unknownId), response.getBody());
+    }
+
+    @Test
+    void getClientByIdReturnsClientResponse() {
+        ClientEntity entity = insertClientRecord();
+
+        ResponseEntity<ClientResponse> response = restTemplate.getForEntity("/clients/" + entity.getId(), ClientResponse.class);
+        ClientResponse actual = response.getBody();
+
+        assertEquals(FULL_NAME, actual.fullName());
+        assertEquals(DISPLAY_NAME, actual.displayName());
+        assertEquals(EMAIL, actual.email());
+        assertEquals(DETAILS, actual.details());
+        assertEquals(ACTIVE, actual.active());
+        assertEquals(LOCATION, actual.location());
+    }
+
+    private ClientEntity insertClientRecord() {
         ClientEntity clientEntity = new ClientEntity();
         clientEntity.setFullName(FULL_NAME);
         clientEntity.setDisplayName(DISPLAY_NAME);
@@ -69,6 +94,6 @@ public class ClientsIntegrationTest {
         clientEntity.setDetails(DETAILS);
         clientEntity.setActive(ACTIVE);
         clientEntity.setLocation(LOCATION);
-        clientsRepository.save(clientEntity);
+        return clientsRepository.save(clientEntity);
     }
 }

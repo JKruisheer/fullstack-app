@@ -51,4 +51,23 @@ class ClientsControllerTest {
         verify(clientsService, times(1)).getAllClients();
         verify(clientsControllerMapper, times(1)).toClientResponse(mockedClient);
     }
+
+    @Test
+    void getClientByIdShouldReturnMappedClientResponse() {
+        Long id = 1L;
+        Client mockedClient = mock(Client.class);
+        when(clientsService.getClientById(id)).thenReturn(mockedClient);
+
+        ClientResponse mockedClientResponse = mock(ClientResponse.class);
+        when(clientsControllerMapper.toClientResponse(mockedClient)).thenReturn(mockedClientResponse);
+
+        ResponseEntity<ClientResponse> actual = clientsController.getClientById(id);
+
+        assertEquals(OK, actual.getStatusCode());
+
+        assertEquals(mockedClientResponse, actual.getBody());
+
+        verify(clientsService, times(1)).getClientById(id);
+        verify(clientsControllerMapper, times(1)).toClientResponse(mockedClient);
+    }
 }

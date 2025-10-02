@@ -1,6 +1,7 @@
 package com.assignment.client_management.services;
 
 import com.assignment.client_management.entities.ClientEntity;
+import com.assignment.client_management.exceptions.UnknownClientException;
 import com.assignment.client_management.repositories.ClientsRepository;
 import com.assignment.client_management.services.mapper.ClientsServiceMapper;
 import com.assignment.client_management.services.model.Client;
@@ -11,8 +12,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -44,6 +47,35 @@ class ClientsServiceTest {
         assertEquals(mockedClient, actual.get(0));
 
         verify(clientsRepository, times(1)).findAll();
+        verify(clientsServiceMapper, times(1)).toClient(mockedEntity);
+    }
+
+    @Test
+    void testGetClientByIdShouldThrowIfClientNotFound() {
+        Long id = 1L;
+        when(clientsRepository.findById(id)).thenReturn(Optional.empty());
+
+        var exception = assertThrows(UnknownClientException.class, () -> clientsService.getClientById(id));
+
+        assertEquals("Client with id 1 not found", exception.getMessage());
+
+        verify(clientsRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void testGetClientByIdShouldReturnMappedClientIfFound() {
+        Long id = 1L;
+        ClientEntity mockedEntity = mock(ClientEntity.class);
+        when(clientsRepository.findById(id)).thenReturn(Optional.of(mockedEntity));
+
+        Client mockedClient = mock(Client.class);
+        when(clientsServiceMapper.toClient(mockedEntity)).thenReturn(mockedClient);
+
+        Client actual = clientsService.getClientById(id);
+
+        assertEquals(mockedClient, actual);
+
+        verify(clientsRepository, times(1)).findById(id);
         verify(clientsServiceMapper, times(1)).toClient(mockedEntity);
     }
 }
