@@ -38,6 +38,7 @@ public class ClientsService {
 
     public Long createClient(NewClient newClient) {
         ClientEntity clientEntity = clientsServiceMapper.toClientEntity(newClient);
+        //todo add some validation here, because email is mandatory, we want to control that and not rely on the db unique constraint violations
         return clientsRepository.save(clientEntity).getId();
     }
 }

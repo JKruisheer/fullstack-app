@@ -1,6 +1,7 @@
 package com.assignment.client_management.integration;
 
 import com.assignment.client_management.controllers.model.ClientResponse;
+import com.assignment.client_management.controllers.model.NewClientRequest;
 import com.assignment.client_management.entities.ClientEntity;
 import com.assignment.client_management.repositories.ClientsRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
@@ -16,6 +18,7 @@ import java.net.URI;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -112,6 +115,28 @@ public class ClientsIntegrationTest {
         Optional<ClientEntity> clientEntity = clientsRepository.findById(entity.getId());
 
         assertTrue(clientEntity.isEmpty());
+    }
+
+    @Test
+    void createClientShouldReturnCorrectLocation() {
+        NewClientRequest newClientRequest = new NewClientRequest(
+                FULL_NAME, DISPLAY_NAME, EMAIL, DETAILS, ACTIVE, LOCATION
+        );
+        HttpEntity<NewClientRequest> requestEntity = new HttpEntity<>(newClientRequest);
+
+        ResponseEntity<Void> response = restTemplate.exchange(
+                "/clients",
+                HttpMethod.POST,
+                requestEntity,
+                Void.class
+        );
+
+        assertEquals(201, response.getStatusCodeValue());
+        URI uri = response.getHeaders().getLocation();
+        assertNotNull(uri);
+
+        ResponseEntity<ClientResponse> createdClient = restTemplate.getForEntity(uri.getPath(), ClientResponse.class);
+        assertNotNull(createdClient.getBody());
     }
 
     private ClientEntity insertClientRecord() {
