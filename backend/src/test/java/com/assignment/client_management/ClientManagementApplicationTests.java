@@ -1,10 +1,10 @@
-package com.assignment.client_service;
+package com.assignment.client_management;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ClientServiceApplicationTests {
+class ClientManagementApplicationTests {
 
 	@Test
 	void contextLoads() {
