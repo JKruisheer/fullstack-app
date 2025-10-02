@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ClientsServiceTest {
+    private static final Long ID = 1L;
 
     @Mock
     private ClientsRepository clientsRepository;
@@ -52,30 +53,50 @@ class ClientsServiceTest {
 
     @Test
     void testGetClientByIdShouldThrowIfClientNotFound() {
-        Long id = 1L;
-        when(clientsRepository.findById(id)).thenReturn(Optional.empty());
+        when(clientsRepository.findById(ID)).thenReturn(Optional.empty());
 
-        var exception = assertThrows(UnknownClientException.class, () -> clientsService.getClientById(id));
+        var exception = assertThrows(UnknownClientException.class, () -> clientsService.getClientById(ID));
 
         assertEquals("Client with id 1 not found", exception.getMessage());
 
-        verify(clientsRepository, times(1)).findById(id);
+        verify(clientsRepository, times(1)).findById(ID);
     }
 
     @Test
     void testGetClientByIdShouldReturnMappedClientIfFound() {
-        Long id = 1L;
         ClientEntity mockedEntity = mock(ClientEntity.class);
-        when(clientsRepository.findById(id)).thenReturn(Optional.of(mockedEntity));
+        when(clientsRepository.findById(ID)).thenReturn(Optional.of(mockedEntity));
 
         Client mockedClient = mock(Client.class);
         when(clientsServiceMapper.toClient(mockedEntity)).thenReturn(mockedClient);
 
-        Client actual = clientsService.getClientById(id);
+        Client actual = clientsService.getClientById(ID);
 
         assertEquals(mockedClient, actual);
 
-        verify(clientsRepository, times(1)).findById(id);
+        verify(clientsRepository, times(1)).findById(ID);
         verify(clientsServiceMapper, times(1)).toClient(mockedEntity);
+    }
+
+    @Test
+    void testDeleteClientByIdShouldThrowIfClientNotFound() {
+        when(clientsRepository.findById(ID)).thenReturn(Optional.empty());
+
+        var exception = assertThrows(UnknownClientException.class, () -> clientsService.deleteClientById(ID));
+
+        assertEquals("Client with id 1 not found", exception.getMessage());
+
+        verify(clientsRepository, times(1)).findById(ID);
+    }
+
+    @Test
+    void testDeleteClientByIdShouldCallRepository() {
+        ClientEntity mockedEntity = mock(ClientEntity.class);
+        when(clientsRepository.findById(ID)).thenReturn(Optional.of(mockedEntity));
+
+        clientsService.deleteClientById(ID);
+
+        verify(clientsRepository, times(1)).findById(ID);
+        verify(clientsRepository, times(1)).delete(mockedEntity);
     }
 }

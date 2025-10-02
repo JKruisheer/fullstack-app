@@ -18,10 +18,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 @ExtendWith(MockitoExtension.class)
 class ClientsControllerTest {
+    private static final Long ID = 1L;
 
     @Mock
     private ClientsService clientsService;
@@ -54,20 +56,27 @@ class ClientsControllerTest {
 
     @Test
     void getClientByIdShouldReturnMappedClientResponse() {
-        Long id = 1L;
         Client mockedClient = mock(Client.class);
-        when(clientsService.getClientById(id)).thenReturn(mockedClient);
+        when(clientsService.getClientById(ID)).thenReturn(mockedClient);
 
         ClientResponse mockedClientResponse = mock(ClientResponse.class);
         when(clientsControllerMapper.toClientResponse(mockedClient)).thenReturn(mockedClientResponse);
 
-        ResponseEntity<ClientResponse> actual = clientsController.getClientById(id);
+        ResponseEntity<ClientResponse> actual = clientsController.getClientById(ID);
 
         assertEquals(OK, actual.getStatusCode());
 
         assertEquals(mockedClientResponse, actual.getBody());
 
-        verify(clientsService, times(1)).getClientById(id);
+        verify(clientsService, times(1)).getClientById(ID);
         verify(clientsControllerMapper, times(1)).toClientResponse(mockedClient);
+    }
+
+    @Test
+    void deleteClientByIdShouldReturnNoContentAndCallService() {
+        ResponseEntity<Void> actual = clientsController.deleteClientById(ID);
+        assertEquals(NO_CONTENT, actual.getStatusCode());
+
+        verify(clientsService, times(1)).deleteClientById(ID);
     }
 }

@@ -8,17 +8,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.net.URI;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class ClientsIntegrationTest {
-
-    private static final Long ID = 1L;
     private static final String FULL_NAME = "John Doe";
     private static final String DISPLAY_NAME = "JD";
     private static final String EMAIL = "john@doe.com";
@@ -84,6 +87,31 @@ public class ClientsIntegrationTest {
         assertEquals(DETAILS, actual.details());
         assertEquals(ACTIVE, actual.active());
         assertEquals(LOCATION, actual.location());
+    }
+
+    @Test
+    void deleteClientByIdReturnsNotFound() {
+        Long unknownId = 99L;
+        ResponseEntity<String> response = restTemplate.exchange(
+                "/clients/" + unknownId,
+                HttpMethod.DELETE,
+                null,
+                String.class
+        );
+
+        assertEquals(NOT_FOUND, response.getStatusCode());
+        assertEquals(String.format("Client with id %d not found", unknownId), response.getBody());
+    }
+
+    @Test
+    void deleteClientByIdRemovesClient() {
+        ClientEntity entity = insertClientRecord();
+
+        restTemplate.delete(URI.create("/clients/" + entity.getId()));
+
+        Optional<ClientEntity> clientEntity = clientsRepository.findById(entity.getId());
+
+        assertTrue(clientEntity.isEmpty());
     }
 
     private ClientEntity insertClientRecord() {

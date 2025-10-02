@@ -29,4 +29,9 @@ public class ClientsService {
         ClientEntity clientEntity = clientsRepository.findById(id).orElseThrow(() -> new UnknownClientException(String.format("Client with id %d not found", id)));
         return clientsServiceMapper.toClient(clientEntity);
     }
+
+    public void deleteClientById(Long id) {
+        ClientEntity clientEntity = clientsRepository.findById(id).orElseThrow(() -> new UnknownClientException(String.format("Client with id %d not found", id)));
+        clientsRepository.delete(clientEntity);
+    }
 }
