@@ -1,7 +1,8 @@
 package com.assignment.client_management.services.mapper;
 
 import com.assignment.client_management.entities.ClientEntity;
-import com.assignment.client_management.services.model.Client;
+import com.assignment.client_management.services.model.ClientInformation;
+import com.assignment.client_management.services.model.NewClient;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,17 +20,32 @@ class ClientsServiceMapperTest {
     private final ClientsServiceMapper clientsServiceMapper = new ClientsServiceMapper();
 
     @Test
-    void testClientEntityMapper() {
-        Client actual = clientsServiceMapper.toClient(createTestClientEntity());
-        Client expected = createExpectedClient();
+    void testToClient() {
+        ClientInformation actual = clientsServiceMapper.toClient(createClientEntity());
+        ClientInformation expected = createExpectedClient();
         assertEquals(expected, actual);
     }
 
-    private Client createExpectedClient() {
-        return new Client(ID, FULL_NAME, DISPLAY_NAME, EMAIL, DETAILS, ACTIVE, LOCATION);
+    private ClientInformation createExpectedClient() {
+        return new ClientInformation(ID, FULL_NAME, DISPLAY_NAME, EMAIL, DETAILS, ACTIVE, LOCATION);
     }
 
-    private ClientEntity createTestClientEntity() {
+    @Test
+    void testToClientEntity() {
+        ClientEntity actual = clientsServiceMapper.toClientEntity(createNewClient());
+        assertEquals(FULL_NAME, actual.getFullName());
+        assertEquals(DISPLAY_NAME, actual.getDisplayName());
+        assertEquals(EMAIL, actual.getEmail());
+        assertEquals(DETAILS, actual.getDetails());
+        assertEquals(LOCATION, actual.getLocation());
+        assertEquals(ACTIVE, actual.isActive());
+    }
+
+    private NewClient createNewClient() {
+        return new NewClient(FULL_NAME, DISPLAY_NAME, EMAIL, DETAILS, ACTIVE, LOCATION);
+    }
+
+    private ClientEntity createClientEntity() {
         ClientEntity entity = new ClientEntity();
         entity.setId(ID);
         entity.setFullName(FULL_NAME);
@@ -40,5 +56,4 @@ class ClientsServiceMapperTest {
         entity.setLocation(LOCATION);
         return entity;
     }
-
 }

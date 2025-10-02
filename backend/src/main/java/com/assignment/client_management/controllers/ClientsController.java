@@ -2,14 +2,19 @@ package com.assignment.client_management.controllers;
 
 import com.assignment.client_management.controllers.mapper.ClientsControllerMapper;
 import com.assignment.client_management.controllers.model.ClientResponse;
+import com.assignment.client_management.controllers.model.NewClientRequest;
 import com.assignment.client_management.services.ClientsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -44,6 +49,16 @@ public class ClientsController {
         return ResponseEntity.noContent().build();
     }
 
-    //TODO POST API to add a new user
+    @PostMapping
+    public ResponseEntity<Void> createClient(@RequestBody NewClientRequest newClientRequest) {
+        Long id = clientsService.createClient(clientsControllerMapper.toNewClient(newClientRequest));
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(id)
+                .toUri();
+        return ResponseEntity.created(location).build();
+    }
+
     //TODO PATCH api to modify data.
 }
