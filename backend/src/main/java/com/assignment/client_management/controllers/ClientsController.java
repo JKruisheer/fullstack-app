@@ -11,6 +11,9 @@ import com.assignment.client_management.services.ClientsService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +42,13 @@ public class ClientsController {
     }
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ClientResponse>> getClients() {
-        //todo change this because this has to be a cookie
+    public ResponseEntity<List<ClientResponse>> getClients(HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from("myCookie", "someValue")
+                .httpOnly(false)
+                .secure(false)
+                .path("/")
+                .build();
+        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         List<ClientResponse> clientsResponse = clientsService.getClients().stream().map(clientsControllerMapper::toClientResponse).toList();
         return ResponseEntity.ok(clientsResponse);
     }

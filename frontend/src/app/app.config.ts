@@ -32,6 +32,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideApi({
       basePath: environment.BASE_PATH_URL,
+      withCredentials: true
     }),
     provideZoneChangeDetection({eventCoalescing: true}),
     provideRouter(routes),

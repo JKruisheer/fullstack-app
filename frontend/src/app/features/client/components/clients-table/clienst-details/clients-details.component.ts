@@ -1,12 +1,7 @@
 import {Component, effect, inject, input, InputSignal, model, ModelSignal} from '@angular/core';
 import {Dialog} from 'primeng/dialog';
 import {Button} from 'primeng/button';
-import {
-  ClientResponse,
-  ClientsControllerService,
-  PatchClientRequest,
-  UnknownClientProblem
-} from '../../../../../../api';
+import {ClientResponse, ClientsControllerService, PatchClientRequest} from '../../../../../../api';
 import {Textarea} from 'primeng/textarea';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Checkbox} from 'primeng/checkbox';
@@ -101,8 +96,7 @@ export class ClientsDetailsComponent {
             this.clientFacade.loadClients();
             this.clientDetailsVisible.set(false);
           },
-          error: (err) => {
-            const errMessage = err.error as UnknownClientProblem;
+          error: () => {
             //todo notification service probably
           }
         })

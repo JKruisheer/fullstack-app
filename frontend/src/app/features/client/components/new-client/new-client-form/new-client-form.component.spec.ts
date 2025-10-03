@@ -34,6 +34,8 @@ describe('NewClientFormComponent', () => {
       of({}) as unknown as Observable<HttpEvent<object>>
     );
 
+    clientsServiceMock.createClient.calls.reset();
+
   });
 
   it('should create the component', () => {
@@ -54,6 +56,8 @@ describe('NewClientFormComponent', () => {
     expect(spectator.component.newClientForm.get('fullName')?.touched).toBeTrue();
     expect(spectator.component.newClientForm.get('displayName')?.touched).toBeTrue();
     expect(spectator.component.newClientForm.get('email')?.touched).toBeTrue();
+
+    expect(clientsServiceMock.createClient).not.toHaveBeenCalled();
   });
 
   it('should call createClient and navigate back on successful save', () => {

@@ -62,6 +62,7 @@ export class NewClientFormComponent {
   saveClient() {
     if (!this.newClientForm.valid) {
       this.newClientForm.markAllAsTouched();
+      return;
     }
 
     const formControls = this.newClientForm.controls

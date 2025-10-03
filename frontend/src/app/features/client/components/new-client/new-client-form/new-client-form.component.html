@@ -11,7 +11,7 @@
 
   <form [formGroup]="newClientForm">
     <div class="flex items-center mb-3">
-      <label for="fullName" class="font-semibold w-24">Full Name</label>
+      <label for="fullName" class="font-semibold w-24" required>Full Name</label>
       <input pInputText id="fullName" class="flex-auto" formControlName="fullName"/>
     </div>
     @if (newClientForm.get('fullName')?.invalid && newClientForm.get('fullName')?.touched) {
