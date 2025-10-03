@@ -5,7 +5,19 @@
   } @else if (errorMessage()) {
     <p-message severity="error">{{ errorMessage() }}</p-message>
   } @else {
-    <p-table [value]="clients()">
+    <p-table [value]="filteredClientList()" #dt2>
+      <ng-template #caption>
+        <div class="flex">
+          <p-iconfield iconPosition="left" class="ml-auto">
+            <p-inputicon>
+              <i class="pi pi-search"></i>
+            </p-inputicon>
+            <input pInputText type="text" (input)="filterTable($event.target.value)"
+                   placeholder="Search clients"/>
+          </p-iconfield>
+        </div>
+      </ng-template>
+
       <ng-template #header>
         <tr>
           <th pSortableColumn="fullName" style="width:20%">
