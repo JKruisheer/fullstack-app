@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit, signal, WritableSignal} from '@angular/core';
-import {ClientResponse, ClientsControllerService} from '../../../../../api';
+import {ChangeDetectionStrategy, Component, effect, inject, OnInit, signal, WritableSignal} from '@angular/core';
+import {ClientResponse} from '../../../../../api';
 import {ProgressSpinner} from 'primeng/progressspinner';
 import {Message} from 'primeng/message';
 import {TableModule} from 'primeng/table';
@@ -9,6 +9,7 @@ import {InputIcon} from 'primeng/inputicon';
 import {IconField} from 'primeng/iconfield';
 import {InputText} from 'primeng/inputtext';
 import {ClientsDetailsComponent} from './clienst-details/clients-details.component';
+import {ClientFacade} from '../../facade/client.facade';
 
 @Component({
   selector: 'app-clients-table',
@@ -24,37 +25,36 @@ import {ClientsDetailsComponent} from './clienst-details/clients-details.compone
     InputText,
     ClientsDetailsComponent
   ],
-  templateUrl: './clients-table.component.html'
+  templateUrl: './clients-table.component.html',
+  providers: [ClientFacade]
 })
 export class ClientsTableComponent implements OnInit {
-  private readonly clientsService: ClientsControllerService = inject(ClientsControllerService);
-  readonly isLoading: WritableSignal<boolean> = signal(true);
-  readonly errorMessage: WritableSignal<string> = signal('');
+  readonly clientFacade: ClientFacade = inject(ClientFacade)
 
-  private readonly originalClientList: WritableSignal<ClientResponse[]> = signal([])
   readonly filteredClientList: WritableSignal<ClientResponse[]> = signal([])
 
   readonly openEditClientPopup: WritableSignal<boolean> = signal<boolean>(false);
   readonly editClientValue: WritableSignal<ClientResponse | undefined> = signal<ClientResponse | undefined>(undefined);
 
-  ngOnInit(): void {
-    this.clientsService.getClients().subscribe({
-        next: (clients: ClientResponse[]) => {
-          this.isLoading.set(false);
-          this.originalClientList.set(clients);
-          this.filteredClientList.set(clients);
-        },
-        error: () => {
-          this.errorMessage.set("Something went wrong with loading the clients.");
-          this.isLoading.set(false);
-        }
+  constructor() {
+    effect(() => {
+      this.filteredClientList.set(this.clientFacade.originalClientList())
+    });
+
+    effect(() => {
+      if (!this.openEditClientPopup()) {
+        this.editClientValue.set(undefined)
       }
-    )
+    });
+  }
+
+  ngOnInit(): void {
+    this.clientFacade.loadClients();
   }
 
   filterTable(value: string) {
     const search = value.toLowerCase();
-    const filtered = this.originalClientList().filter(client =>
+    const filtered = this.clientFacade.originalClientList().filter(client =>
       (client.fullName?.toLowerCase().includes(search) ?? false) ||
       (client.displayName?.toLowerCase().includes(search) ?? false) ||
       (client.email?.toLowerCase().includes(search) ?? false) ||

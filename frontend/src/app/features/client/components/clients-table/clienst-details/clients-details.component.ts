@@ -7,6 +7,7 @@ import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import {Checkbox} from 'primeng/checkbox';
 import {InputText} from 'primeng/inputtext';
 import {Message} from 'primeng/message';
+import {ClientFacade} from '../../../facade/client.facade';
 
 export interface ClientDetailsForm {
   displayName: FormControl<string>;
@@ -30,6 +31,7 @@ export interface ClientDetailsForm {
   templateUrl: './clients-details.component.html'
 })
 export class ClientsDetailsComponent {
+  private readonly clientFacade: ClientFacade = inject(ClientFacade);
   private readonly clientsService: ClientsControllerService = inject(ClientsControllerService);
   clientDetailsVisible: ModelSignal<boolean> = model.required<boolean>();
   clientDetails: InputSignal<ClientResponse | undefined> = input.required<ClientResponse | undefined>();
@@ -70,6 +72,7 @@ export class ClientsDetailsComponent {
 
     this.clientsService.updateClient(this.clientDetails()!.id, patchClientRequest).subscribe({
       next: () => {
+        this.clientFacade.loadClients();
         this.clientDetailsVisible.set(false);
       }
     })

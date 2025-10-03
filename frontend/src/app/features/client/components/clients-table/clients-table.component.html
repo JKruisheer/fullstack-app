@@ -1,9 +1,8 @@
 <div class="mt-5">
-
-  @if (isLoading()) {
+  @if (clientFacade.isLoading()) {
     <p-progress-spinner strokeWidth="8" fill="transparent" [style]="{ width: '50px', height: '50px', margin: '30px' }"/>
-  } @else if (errorMessage()) {
-    <p-message severity="error">{{ errorMessage() }}</p-message>
+  } @else if (clientFacade.errorMessage()) {
+    <p-message severity="error">{{ clientFacade.errorMessage() }}</p-message>
   } @else {
     <p-table [value]="filteredClientList()" dataKey="id" selectionMode="single" (onRowSelect)="openEditClientDetails()"
              [(selection)]="editClientValue">
