@@ -1,10 +1,10 @@
 import {Routes} from '@angular/router';
-import {ClientComponent} from './features/client/client.component';
 import {
   NewClientFormComponent
 } from './features/client/components/new-client/new-client-form/new-client-form.component';
+import {ClientsTableComponent} from './features/client/components/clients-table/clients-table.component';
 
 export const routes: Routes = [
-  {path: '', component: ClientComponent},
+  {path: '', component: ClientsTableComponent},
   {path: 'new', component: NewClientFormComponent}
 ];

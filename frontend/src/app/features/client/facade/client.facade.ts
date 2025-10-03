@@ -21,12 +21,4 @@ export class ClientFacade {
       }
     )
   }
-
-  deleteClient(id: number) {
-    this.clientsService.deleteClientById(id).subscribe({
-      next: () => {
-        this.loadClients();
-      }
-    })
-  }
 }
