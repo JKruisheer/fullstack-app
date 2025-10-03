@@ -4,7 +4,11 @@ import com.assignment.client_management.controllers.mapper.ClientsControllerMapp
 import com.assignment.client_management.controllers.model.ClientResponse;
 import com.assignment.client_management.controllers.model.NewClientRequest;
 import com.assignment.client_management.controllers.model.PatchClientRequest;
+import com.assignment.client_management.controllers.problems.UnknownClientProblem;
 import com.assignment.client_management.services.ClientsService;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,12 +43,28 @@ public class ClientsController {
         return ResponseEntity.ok(clientsResponse);
     }
 
+    @ApiResponse(
+            responseCode = "404",
+            description = "Client not found.",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = UnknownClientProblem.class)
+            )
+    )
     @GetMapping(path = "/{id}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<ClientResponse> getClientById(@PathVariable("id") final Long id) {
         ClientResponse clientResponse = clientsControllerMapper.toClientResponse(clientsService.getClientById(id));
         return ResponseEntity.ok(clientResponse);
     }
 
+    @ApiResponse(
+            responseCode = "404",
+            description = "Client not found.",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = UnknownClientProblem.class)
+            )
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClientById(@PathVariable("id") final Long id) {
         clientsService.deleteClientById(id);

@@ -49,7 +49,12 @@
         (click)="delete($event)"
         icon="pi pi-trash"
       />
-      <p-button severity="success" label="Edit client" (click)="saveClient()"/>
+      <p-button
+        severity="success"
+        label="Save client"
+        icon="pi pi-save"
+        (click)="saveClient()"
+      />
     </div>
   </div>
 </p-dialog>

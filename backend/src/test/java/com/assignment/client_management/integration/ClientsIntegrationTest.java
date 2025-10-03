@@ -3,6 +3,7 @@ package com.assignment.client_management.integration;
 import com.assignment.client_management.controllers.model.ClientResponse;
 import com.assignment.client_management.controllers.model.NewClientRequest;
 import com.assignment.client_management.controllers.model.PatchClientRequest;
+import com.assignment.client_management.controllers.problems.UnknownClientProblem;
 import com.assignment.client_management.entities.ClientEntity;
 import com.assignment.client_management.repositories.ClientsRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,10 +75,13 @@ public class ClientsIntegrationTest {
     @Test
     void getClientByIdReturnsNotFound() {
         Long unknownId = 99L;
-        ResponseEntity<String> response = restTemplate.getForEntity("/clients/" + unknownId, String.class);
+        ResponseEntity<UnknownClientProblem> response = restTemplate.getForEntity("/clients/" + unknownId, UnknownClientProblem.class);
 
         assertEquals(NOT_FOUND, response.getStatusCode());
-        assertEquals(String.format("Client with id %d not found", unknownId), response.getBody());
+        UnknownClientProblem unknownClientProblem = response.getBody();
+
+        assertEquals(String.format("Client with id %d not found", unknownId), unknownClientProblem.getTranslation());
+        assertEquals(404, unknownClientProblem.getStatus());
     }
 
     @Test
@@ -98,15 +102,18 @@ public class ClientsIntegrationTest {
     @Test
     void deleteClientByIdReturnsNotFound() {
         Long unknownId = 99L;
-        ResponseEntity<String> response = restTemplate.exchange(
+        ResponseEntity<UnknownClientProblem> response = restTemplate.exchange(
                 "/clients/" + unknownId,
                 HttpMethod.DELETE,
                 null,
-                String.class
+                UnknownClientProblem.class
         );
 
         assertEquals(NOT_FOUND, response.getStatusCode());
-        assertEquals(String.format("Client with id %d not found", unknownId), response.getBody());
+        UnknownClientProblem unknownClientProblem = response.getBody();
+
+        assertEquals(String.format("Client with id %d not found", unknownId), unknownClientProblem.getTranslation());
+        assertEquals(404, unknownClientProblem.getStatus());
     }
 
     @Test

@@ -13,6 +13,7 @@ model/clientResponse.ts
 model/models.ts
 model/newClientRequest.ts
 model/patchClientRequest.ts
+model/unknownClientProblem.ts
 param.ts
 provide-api.ts
 variables.ts
