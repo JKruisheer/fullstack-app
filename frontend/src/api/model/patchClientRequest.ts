@@ -10,9 +10,9 @@
 
 
 export interface PatchClientRequest { 
-    displayName?: string;
-    details?: string;
-    active?: boolean;
-    location?: string;
+    displayName: string;
+    details: string;
+    active: boolean;
+    location: string;
 }
 

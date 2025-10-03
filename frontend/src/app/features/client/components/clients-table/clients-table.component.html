@@ -5,7 +5,8 @@
   } @else if (errorMessage()) {
     <p-message severity="error">{{ errorMessage() }}</p-message>
   } @else {
-    <p-table [value]="filteredClientList()" #dt2>
+    <p-table [value]="filteredClientList()" dataKey="id" selectionMode="single" (onRowSelect)="openEditClientDetails()"
+             [(selection)]="editClientValue">
       <ng-template #caption>
         <div class="flex">
           <p-iconfield iconPosition="left" class="ml-auto">
@@ -53,7 +54,7 @@
         </tr>
       </ng-template>
       <ng-template #body let-client>
-        <tr>
+        <tr [pSelectableRow]="client">
           <td>{{ client.fullName }}</td>
           <td>{{ client.displayName }}</td>
           <td>{{ client.email }}</td>
@@ -66,3 +67,6 @@
     </p-table>
   }
 </div>
+
+<app-clients-details [(clientDetailsVisible)]="openEditClientPopup"
+                     [clientDetails]="editClientValue()"></app-clients-details>

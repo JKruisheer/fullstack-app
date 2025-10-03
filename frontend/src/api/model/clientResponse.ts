@@ -10,12 +10,12 @@
 
 
 export interface ClientResponse { 
-    id?: number;
-    fullName?: string;
-    displayName?: string;
-    email?: string;
-    details?: string;
-    active?: boolean;
-    location?: string;
+    id: number;
+    fullName: string;
+    displayName: string;
+    email: string;
+    details: string;
+    active: boolean;
+    location: string;
 }
 

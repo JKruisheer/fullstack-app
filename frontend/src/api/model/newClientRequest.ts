@@ -10,11 +10,11 @@
 
 
 export interface NewClientRequest { 
-    fullName?: string;
-    displayName?: string;
-    email?: string;
-    details?: string;
-    active?: boolean;
-    location?: string;
+    fullName: string;
+    displayName: string;
+    email: string;
+    details: string;
+    active: boolean;
+    location: string;
 }
 

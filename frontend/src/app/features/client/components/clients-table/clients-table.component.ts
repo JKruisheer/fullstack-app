@@ -8,6 +8,7 @@ import {FormsModule} from '@angular/forms';
 import {InputIcon} from 'primeng/inputicon';
 import {IconField} from 'primeng/iconfield';
 import {InputText} from 'primeng/inputtext';
+import {ClientsDetailsComponent} from './clienst-details/clients-details.component';
 
 @Component({
   selector: 'app-clients-table',
@@ -20,7 +21,8 @@ import {InputText} from 'primeng/inputtext';
     FormsModule,
     InputIcon,
     IconField,
-    InputText
+    InputText,
+    ClientsDetailsComponent
   ],
   templateUrl: './clients-table.component.html'
 })
@@ -31,6 +33,9 @@ export class ClientsTableComponent implements OnInit {
 
   private readonly originalClientList: WritableSignal<ClientResponse[]> = signal([])
   readonly filteredClientList: WritableSignal<ClientResponse[]> = signal([])
+
+  readonly openEditClientPopup: WritableSignal<boolean> = signal<boolean>(false);
+  readonly editClientValue: WritableSignal<ClientResponse | undefined> = signal<ClientResponse | undefined>(undefined);
 
   ngOnInit(): void {
     this.clientsService.getClients().subscribe({
@@ -56,5 +61,9 @@ export class ClientsTableComponent implements OnInit {
       (client.location?.toLowerCase().includes(search) ?? false)
     );
     this.filteredClientList.set(filtered);
+  }
+
+  openEditClientDetails() {
+    this.openEditClientPopup.set(true)
   }
 }
