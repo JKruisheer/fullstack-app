@@ -6,8 +6,8 @@ public record NewClientRequest(
         @NotNull String fullName,
         @NotNull String displayName,
         @NotNull String email,
-        @NotNull String details,
+        String details,
         @NotNull boolean active,
-        @NotNull String location
+        String location
 ) {
 }

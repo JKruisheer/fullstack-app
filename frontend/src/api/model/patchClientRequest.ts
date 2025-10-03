@@ -11,8 +11,8 @@
 
 export interface PatchClientRequest { 
     displayName: string;
-    details: string;
+    details?: string;
     active: boolean;
-    location: string;
+    location?: string;
 }
 

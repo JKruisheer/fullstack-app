@@ -13,8 +13,8 @@ export interface NewClientRequest {
     fullName: string;
     displayName: string;
     email: string;
-    details: string;
+    details?: string;
     active: boolean;
-    location: string;
+    location?: string;
 }
 

@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotNull;
 
 public record PatchClientRequest(
         @NotNull String displayName,
-        @NotNull String details,
+        String details,
         @NotNull boolean active,
-        @NotNull String location
+        String location
 ) {
 }

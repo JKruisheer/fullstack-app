@@ -11,9 +11,9 @@ import {ClientFacade} from '../../../facade/client.facade';
 
 export interface ClientDetailsForm {
   displayName: FormControl<string>;
-  details: FormControl<string>;
+  details: FormControl<string | undefined>;
   active: FormControl<boolean>;
-  location: FormControl<string>;
+  location: FormControl<string | undefined>;
 }
 
 @Component({
@@ -38,9 +38,9 @@ export class ClientsDetailsComponent {
 
   editClientForm: FormGroup<ClientDetailsForm> = new FormGroup<ClientDetailsForm>({
     displayName: new FormControl('', {nonNullable: true, validators: [Validators.required]}),
-    details: new FormControl('', {nonNullable: true, validators: [Validators.required]}),
+    details: new FormControl(undefined, {nonNullable: true,}),
     active: new FormControl(false, {nonNullable: true, validators: [Validators.required]}),
-    location: new FormControl('', {nonNullable: true, validators: [Validators.required]}),
+    location: new FormControl(undefined, {nonNullable: true}),
   });
 
   constructor() {
