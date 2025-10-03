@@ -10,6 +10,7 @@ import {IconField} from 'primeng/iconfield';
 import {InputText} from 'primeng/inputtext';
 import {ClientsDetailsComponent} from './clienst-details/clients-details.component';
 import {ClientFacade} from '../../facade/client.facade';
+import {NewClientButtonComponent} from '../new-client/new-client-button/new-client-button.component';
 
 @Component({
   selector: 'app-clients-table',
@@ -23,7 +24,8 @@ import {ClientFacade} from '../../facade/client.facade';
     InputIcon,
     IconField,
     InputText,
-    ClientsDetailsComponent
+    ClientsDetailsComponent,
+    NewClientButtonComponent
   ],
   templateUrl: './clients-table.component.html',
   providers: [ClientFacade]

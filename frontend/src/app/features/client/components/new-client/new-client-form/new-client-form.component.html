@@ -1,0 +1,72 @@
+<div class="mt-5">
+  <p-button
+    label="Back to overview"
+    icon="pi pi-arrow-left"
+    iconPos="left"
+    (click)="navigateBack()"/>
+</div>
+
+<div class="w-1/2 my-8 p-6">
+  <h2 class="text-2xl font-bold mb-6">New Client</h2>
+
+  <form [formGroup]="newClientForm">
+    <div class="flex items-center mb-3">
+      <label for="fullName" class="font-semibold w-24">Full Name</label>
+      <input pInputText id="fullName" class="flex-auto" formControlName="fullName"/>
+    </div>
+    @if (newClientForm.get('fullName')?.invalid && newClientForm.get('fullName')?.touched) {
+      <div class="ml-24 mb-3">
+        <p-message severity="error" size="small" variant="simple">
+          Full Name is required.
+        </p-message>
+      </div>
+    }
+
+    <div class="flex items-center mb-3">
+      <label for="email" class="font-semibold w-24">Email</label>
+      <input pInputText id="email" class="flex-auto" formControlName="email"/>
+    </div>
+    @if (newClientForm.get('email')?.invalid && newClientForm.get('email')?.touched) {
+      <div class="ml-24 mb-3">
+        <p-message severity="error" size="small" variant="simple">
+          This email is invalid
+        </p-message>
+      </div>
+    }
+
+    <div class="flex items-center mb-3">
+      <label for="displayName" class="font-semibold w-24">Display Name</label>
+      <input pInputText id="displayName" class="flex-auto" formControlName="displayName"/>
+    </div>
+    @if (newClientForm.get('displayName')?.invalid && newClientForm.get('displayName')?.touched) {
+      <div class="ml-24 mb-3">
+        <p-message severity="error" size="small" variant="simple">
+          Display Name is required.
+        </p-message>
+      </div>
+    }
+
+    <div class="flex items-center mb-3">
+      <label for="active" class="font-semibold w-24">Active</label>
+      <p-checkbox inputId="active" formControlName="active" binary="true"></p-checkbox>
+    </div>
+    <div class="flex items-center mb-3">
+      <label for="location" class="font-semibold w-24">Location</label>
+      <input pInputText id="location" class="flex-auto" formControlName="location"/>
+    </div>
+    <div class="flex items-center mb-3">
+      <label for="details" class="font-semibold w-24">Details</label>
+      <textarea pInputTextarea id="details" class="flex-auto" formControlName="details" rows="5" cols="30"></textarea>
+    </div>
+
+    <div class="flex justify-end mt-6">
+      <p-button
+        label="Save"
+        icon="pi pi-save"
+        iconPos="left"
+        (click)="saveClient()"
+      />
+    </div>
+  </form>
+</div>
+

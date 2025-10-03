@@ -68,11 +68,13 @@ export class ClientsDetailsComponent {
       return;
     }
 
+    const formControls = this.editClientForm.controls
+
     const patchClientRequest: PatchClientRequest = {
-      displayName: this.editClientForm.controls.displayName.value,
-      details: this.editClientForm.controls.details.value,
-      active: this.editClientForm.controls.active.value,
-      location: this.editClientForm.controls.location.value,
+      displayName: formControls.displayName.value,
+      details: formControls.details.value,
+      active: formControls.active.value,
+      location: formControls.location.value,
     }
 
     this.clientsService.updateClient(this.clientDetails()!.id, patchClientRequest).subscribe({

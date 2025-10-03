@@ -30,7 +30,7 @@
     </div>
   </form>
   <div class="flex justify-between gap-2 mt-4">
-    <p-button label="Cancel" severity="secondary" (click)="clientDetailsVisible.set(false)"/>
+    <p-button label="Close details" severity="secondary" (click)="clientDetailsVisible.set(false)"/>
     <div class="flex gap-2">
       <p-confirmpopup #cp>
         <ng-template #headless let-message>
@@ -38,7 +38,7 @@
             <span>{{ message.message }}</span>
             <div class="flex items-center gap-2 mt-4">
               <p-button (onClick)="cp.onAccept()" label="Yes" size="small" severity="danger"/>
-              <p-button (onClick)="cp.onReject()" label="Cancel" [text]="true" size="small" severity="secondary"/>
+              <p-button (onClick)="cp.onReject()" label="Cancel" size="small" severity="secondary"/>
             </div>
           </div>
         </ng-template>

@@ -7,7 +7,9 @@
     <p-table [value]="filteredClientList()" dataKey="id" selectionMode="single" (onRowSelect)="openEditClientDetails()"
              [(selection)]="editClientValue">
       <ng-template #caption>
+
         <div class="flex">
+          <app-new-client-button/>
           <p-iconfield iconPosition="left" class="ml-auto">
             <p-inputicon>
               <i class="pi pi-search"></i>
