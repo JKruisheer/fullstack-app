@@ -110,7 +110,7 @@ class ClientsServiceTest {
         ClientEntity clientEntityMock = mock(ClientEntity.class);
         when(clientEntityMock.getId()).thenReturn(ID);
         when(clientsServiceMapper.toClientEntity(newClientMock)).thenReturn(clientEntityMock);
-        when(clientsRepository.findByEmail(any())).thenReturn(Optional.empty());
+        when(clientsRepository.findByEmailIgnoreCase(any())).thenReturn(Optional.empty());
 
         when(clientsRepository.save(clientEntityMock)).thenReturn(clientEntityMock);
 
@@ -128,7 +128,7 @@ class ClientsServiceTest {
         ClientEntity clientEntityMock = mock(ClientEntity.class);
         when(clientsServiceMapper.toClientEntity(newClientMock)).thenReturn(clientEntityMock);
 
-        when(clientsRepository.findByEmail(any())).thenReturn(Optional.of(clientEntityMock));
+        when(clientsRepository.findByEmailIgnoreCase(any())).thenReturn(Optional.of(clientEntityMock));
 
         var exception = assertThrows(DataValidationException.class, () -> clientsService.createClient(newClientMock));
 

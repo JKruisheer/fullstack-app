@@ -87,6 +87,7 @@ export class ClientsDetailsComponent {
         this.clientFacade.loadClients();
         this.clientDetailsVisible.set(false);
       }
+      //todo problem here
     })
   }
 
@@ -102,7 +103,7 @@ export class ClientsDetailsComponent {
           },
           error: (err) => {
             const errMessage = err.error as UnknownClientProblem;
-            console.log(errMessage);
+            //todo notification service probably
           }
         })
       }

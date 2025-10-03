@@ -59,6 +59,10 @@
       <textarea pInputTextarea id="details" class="flex-auto" formControlName="details" rows="5" cols="30"></textarea>
     </div>
 
+    @if (saveClientErrorMessage(); as errorMessage) {
+      <p-message severity="error">{{ errorMessage }}</p-message>
+    }
+
     <div class="flex justify-end mt-6">
       <p-button
         label="Save"
@@ -68,5 +72,6 @@
       />
     </div>
   </form>
+
 </div>
 

@@ -45,7 +45,7 @@ public class ClientsService {
     }
 
     private void validateEmailOrThrow(String email) {
-        clientsRepository.findByEmail(email)
+        clientsRepository.findByEmailIgnoreCase(email)
                 .ifPresent((entity) -> {
                     throw new DataValidationException("This email is already used");
                 });
@@ -62,7 +62,7 @@ public class ClientsService {
     }
 
     private void validateDetailsOrThrow(String details) {
-        if (details == null || details.length() > MAX_DETAILS_LENGTH) {
+        if (details != null && details.length() > MAX_DETAILS_LENGTH) {
             throw new DataValidationException("This provided details are not valid.");
         }
     }

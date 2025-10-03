@@ -4,6 +4,7 @@ import com.assignment.client_management.controllers.mapper.ClientsControllerMapp
 import com.assignment.client_management.controllers.model.ClientResponse;
 import com.assignment.client_management.controllers.model.NewClientRequest;
 import com.assignment.client_management.controllers.model.PatchClientRequest;
+import com.assignment.client_management.controllers.problems.Problem;
 import com.assignment.client_management.controllers.problems.UnknownClientProblem;
 import com.assignment.client_management.exceptions.DataInputException;
 import com.assignment.client_management.services.ClientsService;
@@ -72,6 +73,14 @@ public class ClientsController {
         return ResponseEntity.noContent().build();
     }
 
+    @ApiResponse(
+            responseCode = "400",
+            description = "Data input problem.",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = Problem.class)
+            )
+    )
     @PostMapping
     public ResponseEntity<Void> createClient(@RequestBody final NewClientRequest newClientRequest) {
         validateNewClientRequest(newClientRequest);
@@ -90,6 +99,14 @@ public class ClientsController {
         }
     }
 
+    @ApiResponse(
+            responseCode = "400",
+            description = "Data input problem.",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = Problem.class)
+            )
+    )
     @PatchMapping("{id}")
     public ResponseEntity<Void> updateClient(@PathVariable final Long id, @RequestBody final PatchClientRequest patchClientRequest) {
         validatePatchClientRequest(patchClientRequest);

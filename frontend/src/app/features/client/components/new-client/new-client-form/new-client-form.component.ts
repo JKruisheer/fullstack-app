@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, effect, inject, signal, WritableSignal} from '@angular/core';
 import {Button} from 'primeng/button';
 import {Location} from '@angular/common';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -6,7 +6,8 @@ import {Message} from 'primeng/message';
 import {InputText} from 'primeng/inputtext';
 import {Checkbox} from 'primeng/checkbox';
 import {Textarea} from 'primeng/textarea';
-import {ClientsControllerService, NewClientRequest} from '../../../../../../api';
+import {ClientsControllerService, NewClientRequest, Problem} from '../../../../../../api';
+import {toSignal} from '@angular/core/rxjs-interop';
 
 export interface NewClientForm {
   fullName: FormControl<string>;
@@ -33,6 +34,8 @@ export class NewClientFormComponent {
   private readonly clientsService: ClientsControllerService = inject(ClientsControllerService);
   private readonly location: Location = inject(Location);
 
+  readonly saveClientErrorMessage: WritableSignal<string> = signal<string>('');
+
   newClientForm: FormGroup<NewClientForm> = new FormGroup<NewClientForm>({
     fullName: new FormControl('', {nonNullable: true, validators: [Validators.required]}),
     displayName: new FormControl('', {nonNullable: true, validators: [Validators.required]}),
@@ -41,6 +44,16 @@ export class NewClientFormComponent {
     active: new FormControl(false, {nonNullable: true, validators: [Validators.required]}),
     location: new FormControl(undefined, {nonNullable: true}),
   });
+
+  readonly clientFormChanges = toSignal(this.newClientForm.controls.email.valueChanges);
+
+  constructor() {
+    effect(() => {
+      this.clientFormChanges()
+      this.saveClientErrorMessage.set('')
+    });
+  }
+
 
   navigateBack() {
     this.location.back();
@@ -65,6 +78,14 @@ export class NewClientFormComponent {
     this.clientsService.createClient(newClientRequest).subscribe({
       next: () => {
         this.navigateBack();
+      },
+      error: (err) => {
+        const errMessage = err.error as Problem;
+        if (errMessage.translation) {
+          this.saveClientErrorMessage.set(errMessage.translation);
+        } else {
+          this.saveClientErrorMessage.set("Something went wrong with saving the client");
+        }
       }
     })
   }
