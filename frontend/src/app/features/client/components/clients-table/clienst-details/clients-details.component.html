@@ -29,8 +29,27 @@
       <textarea pInputTextarea id="details" class="flex-auto" formControlName="details" rows="5" cols="30"></textarea>
     </div>
   </form>
-  <div class="flex justify-end gap-2">
+  <div class="flex justify-between gap-2 mt-4">
     <p-button label="Cancel" severity="secondary" (click)="clientDetailsVisible.set(false)"/>
-    <p-button label="Save" (click)="saveClient()"/>
+    <div class="flex gap-2">
+      <p-confirmpopup #cp>
+        <ng-template #headless let-message>
+          <div class="rounded p-4">
+            <span>{{ message.message }}</span>
+            <div class="flex items-center gap-2 mt-4">
+              <p-button (onClick)="cp.onAccept()" label="Yes" size="small" severity="danger"/>
+              <p-button (onClick)="cp.onReject()" label="Cancel" [text]="true" size="small" severity="secondary"/>
+            </div>
+          </div>
+        </ng-template>
+      </p-confirmpopup>
+      <p-button
+        label="Delete"
+        severity="danger"
+        (click)="delete($event)"
+        icon="pi pi-trash"
+      />
+      <p-button severity="success" label="Edit client" (click)="saveClient()"/>
+    </div>
   </div>
 </p-dialog>

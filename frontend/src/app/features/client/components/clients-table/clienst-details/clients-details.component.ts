@@ -8,6 +8,8 @@ import {Checkbox} from 'primeng/checkbox';
 import {InputText} from 'primeng/inputtext';
 import {Message} from 'primeng/message';
 import {ClientFacade} from '../../../facade/client.facade';
+import {ConfirmationService} from 'primeng/api';
+import {ConfirmPopup} from 'primeng/confirmpopup';
 
 export interface ClientDetailsForm {
   displayName: FormControl<string>;
@@ -26,12 +28,15 @@ export interface ClientDetailsForm {
     ReactiveFormsModule,
     Checkbox,
     InputText,
-    Message
+    Message,
+    ConfirmPopup
   ],
-  templateUrl: './clients-details.component.html'
+  templateUrl: './clients-details.component.html',
+  providers: [ConfirmationService]
 })
 export class ClientsDetailsComponent {
   private readonly clientFacade: ClientFacade = inject(ClientFacade);
+  private readonly confirmationService: ConfirmationService = inject(ConfirmationService);
   private readonly clientsService: ClientsControllerService = inject(ClientsControllerService);
   clientDetailsVisible: ModelSignal<boolean> = model.required<boolean>();
   clientDetails: InputSignal<ClientResponse | undefined> = input.required<ClientResponse | undefined>();
@@ -76,5 +81,20 @@ export class ClientsDetailsComponent {
         this.clientDetailsVisible.set(false);
       }
     })
+  }
+
+  delete(event: Event) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Are you sure that you want to delete this client?',
+      accept: () => {
+        this.clientsService.deleteClientById(this.clientDetails()!.id).subscribe({
+          next: () => {
+            this.clientFacade.loadClients();
+            this.clientDetailsVisible.set(false);
+          }
+        })
+      }
+    });
   }
 }

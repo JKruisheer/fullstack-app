@@ -8,7 +8,7 @@ export class ClientFacade {
 
   public readonly originalClientList: WritableSignal<ClientResponse[]> = signal([])
 
-  loadClients() {
+  loadClients(): void {
     this.clientsService.getClients().subscribe({
         next: (clients: ClientResponse[]) => {
           this.isLoading.set(false);
@@ -20,5 +20,13 @@ export class ClientFacade {
         }
       }
     )
+  }
+
+  deleteClient(id: number) {
+    this.clientsService.deleteClientById(id).subscribe({
+      next: () => {
+        this.loadClients();
+      }
+    })
   }
 }
