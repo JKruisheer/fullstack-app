@@ -1,6 +1,7 @@
 package com.assignment.client_management.services;
 
 import com.assignment.client_management.entities.ClientEntity;
+import com.assignment.client_management.exceptions.DataValidationException;
 import com.assignment.client_management.exceptions.UnknownClientException;
 import com.assignment.client_management.repositories.ClientsRepository;
 import com.assignment.client_management.services.mapper.ClientsServiceMapper;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Service
 public class ClientsService {
-
+    private static final int MAX_DETAILS_LENGTH = 1024;
     private final ClientsRepository clientsRepository;
     private final ClientsServiceMapper clientsServiceMapper;
 
@@ -39,18 +40,31 @@ public class ClientsService {
 
     public Long createClient(final NewClient newClient) {
         final ClientEntity clientEntity = clientsServiceMapper.toClientEntity(newClient);
-        //todo add some validation here, because email is mandatory, we want to control that and not rely on the db unique constraint violations
+        validateEmailOrThrow(newClient.email());
         return clientsRepository.save(clientEntity).getId();
     }
 
+    private void validateEmailOrThrow(String email) {
+        clientsRepository.findByEmail(email)
+                .ifPresent((entity) -> {
+                    throw new DataValidationException("This email is already used");
+                });
+    }
+
     public void updateClient(final Long id, final UpdateClientInformation updateClientInformation) {
-        //todo add validation here as well, share with the createClients
+        validateDetailsOrThrow(updateClientInformation.details());
         final ClientEntity clientEntity = findOrThrowClientEntity(id);
         clientEntity.setDisplayName(updateClientInformation.displayName());
         clientEntity.setDetails(updateClientInformation.details());
         clientEntity.setActive(updateClientInformation.active());
         clientEntity.setLocation(updateClientInformation.location());
         clientsRepository.save(clientEntity);
+    }
+
+    private void validateDetailsOrThrow(String details) {
+        if (details == null || details.length() > MAX_DETAILS_LENGTH) {
+            throw new DataValidationException("This provided details are not valid.");
+        }
     }
 
     private ClientEntity findOrThrowClientEntity(final Long id) {

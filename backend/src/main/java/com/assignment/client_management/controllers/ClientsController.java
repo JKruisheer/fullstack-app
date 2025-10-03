@@ -5,6 +5,7 @@ import com.assignment.client_management.controllers.model.ClientResponse;
 import com.assignment.client_management.controllers.model.NewClientRequest;
 import com.assignment.client_management.controllers.model.PatchClientRequest;
 import com.assignment.client_management.controllers.problems.UnknownClientProblem;
+import com.assignment.client_management.exceptions.DataInputException;
 import com.assignment.client_management.services.ClientsService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -73,6 +74,7 @@ public class ClientsController {
 
     @PostMapping
     public ResponseEntity<Void> createClient(@RequestBody final NewClientRequest newClientRequest) {
+        validateNewClientRequest(newClientRequest);
         Long id = clientsService.createClient(clientsControllerMapper.toNewClient(newClientRequest));
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -82,9 +84,22 @@ public class ClientsController {
         return ResponseEntity.created(location).build();
     }
 
+    private void validateNewClientRequest(final NewClientRequest newClientRequest) {
+        if (newClientRequest.fullName() == null || newClientRequest.displayName() == null || newClientRequest.email() == null) {
+            throw new DataInputException("Invalid new client request");
+        }
+    }
+
     @PatchMapping("{id}")
     public ResponseEntity<Void> updateClient(@PathVariable final Long id, @RequestBody final PatchClientRequest patchClientRequest) {
+        validatePatchClientRequest(patchClientRequest);
         clientsService.updateClient(id, clientsControllerMapper.toUpdateClientInformation(patchClientRequest));
         return ResponseEntity.noContent().build();
+    }
+
+    private void validatePatchClientRequest(final PatchClientRequest patchClientRequest) {
+        if (patchClientRequest.displayName() == null) {
+            throw new DataInputException("Invalid patch client request");
+        }
     }
 }

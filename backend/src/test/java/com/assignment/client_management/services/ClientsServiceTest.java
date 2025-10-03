@@ -1,6 +1,7 @@
 package com.assignment.client_management.services;
 
 import com.assignment.client_management.entities.ClientEntity;
+import com.assignment.client_management.exceptions.DataValidationException;
 import com.assignment.client_management.exceptions.UnknownClientException;
 import com.assignment.client_management.repositories.ClientsRepository;
 import com.assignment.client_management.services.mapper.ClientsServiceMapper;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -108,6 +110,7 @@ class ClientsServiceTest {
         ClientEntity clientEntityMock = mock(ClientEntity.class);
         when(clientEntityMock.getId()).thenReturn(ID);
         when(clientsServiceMapper.toClientEntity(newClientMock)).thenReturn(clientEntityMock);
+        when(clientsRepository.findByEmail(any())).thenReturn(Optional.empty());
 
         when(clientsRepository.save(clientEntityMock)).thenReturn(clientEntityMock);
 
@@ -120,8 +123,22 @@ class ClientsServiceTest {
     }
 
     @Test
+    void testCreateClientShouldThrowIfEmailAlreadyExists() {
+        NewClient newClientMock = mock(NewClient.class);
+        ClientEntity clientEntityMock = mock(ClientEntity.class);
+        when(clientsServiceMapper.toClientEntity(newClientMock)).thenReturn(clientEntityMock);
+
+        when(clientsRepository.findByEmail(any())).thenReturn(Optional.of(clientEntityMock));
+
+        var exception = assertThrows(DataValidationException.class, () -> clientsService.createClient(newClientMock));
+
+        assertEquals("This email is already used", exception.getMessage());
+    }
+
+    @Test
     void testUpdateClientShouldThrowIfClientNotFound() {
         UpdateClientInformation mockedUpdateClientInformation = mock(UpdateClientInformation.class);
+        when(mockedUpdateClientInformation.details()).thenReturn("Details");
         when(clientsRepository.findById(ID)).thenReturn(Optional.empty());
 
         var exception = assertThrows(UnknownClientException.class, () -> clientsService.updateClient(ID, mockedUpdateClientInformation));
@@ -147,5 +164,14 @@ class ClientsServiceTest {
 
         verify(clientsRepository, times(1)).findById(ID);
         verify(clientsRepository, times(1)).save(clientEntityMock);
+    }
+
+    @Test
+    void updateClientShouldThrowIfDetailsIsTooLong() {
+        UpdateClientInformation updateClientInformation = new UpdateClientInformation("Display name", "a".repeat(1025), false, "Utrecht");
+
+        var exception = assertThrows(DataValidationException.class, () -> clientsService.updateClient(ID, updateClientInformation));
+
+        assertEquals("This provided details are not valid.", exception.getMessage());
     }
 }
