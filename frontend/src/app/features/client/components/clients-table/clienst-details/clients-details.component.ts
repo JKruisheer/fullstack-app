@@ -1,7 +1,7 @@
-import {Component, effect, input, InputSignal, model, ModelSignal} from '@angular/core';
+import {Component, effect, inject, input, InputSignal, model, ModelSignal} from '@angular/core';
 import {Dialog} from 'primeng/dialog';
 import {Button} from 'primeng/button';
-import {ClientResponse} from '../../../../../../api';
+import {ClientResponse, ClientsControllerService, PatchClientRequest} from '../../../../../../api';
 import {Textarea} from 'primeng/textarea';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Checkbox} from 'primeng/checkbox';
@@ -30,6 +30,7 @@ export interface ClientDetailsForm {
   templateUrl: './clients-details.component.html'
 })
 export class ClientsDetailsComponent {
+  private readonly clientsService: ClientsControllerService = inject(ClientsControllerService);
   clientDetailsVisible: ModelSignal<boolean> = model.required<boolean>();
   clientDetails: InputSignal<ClientResponse | undefined> = input.required<ClientResponse | undefined>();
 
@@ -52,5 +53,25 @@ export class ClientsDetailsComponent {
         })
       }
     });
+  }
+
+  saveClient(): void {
+    if (!this.editClientForm.valid) {
+      this.editClientForm.markAllAsTouched();
+      return;
+    }
+
+    const patchClientRequest: PatchClientRequest = {
+      displayName: this.editClientForm.controls.displayName.value,
+      details: this.editClientForm.controls.details.value,
+      active: this.editClientForm.controls.active.value,
+      location: this.editClientForm.controls.location.value,
+    }
+
+    this.clientsService.updateClient(this.clientDetails()!.id, patchClientRequest).subscribe({
+      next: () => {
+        this.clientDetailsVisible.set(false);
+      }
+    })
   }
 }
