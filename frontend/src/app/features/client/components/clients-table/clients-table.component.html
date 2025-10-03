@@ -1,0 +1,56 @@
+<div class="mt-5">
+
+  @if (isLoading()) {
+    <p-progress-spinner strokeWidth="8" fill="transparent" [style]="{ width: '50px', height: '50px', margin: '30px' }"/>
+  } @else if (errorMessage()) {
+    <p-message severity="error">{{ errorMessage() }}</p-message>
+  } @else {
+    <p-table [value]="clients()">
+      <ng-template #header>
+        <tr>
+          <th pSortableColumn="fullName" style="width:20%">
+            <div class="flex items-center gap-2">
+              Full name
+              <p-sortIcon field="fullName"/>
+            </div>
+          </th>
+          <th pSortableColumn="displayName" style="width:20%">
+            <div class="flex items-center gap-2">
+              Display name
+              <p-sortIcon field="displayName"/>
+            </div>
+          </th>
+          <th pSortableColumn="email" style="width:20%">
+            <div class="flex items-center gap-2">
+              Email
+              <p-sortIcon field="email"/>
+            </div>
+          </th>
+          <th pSortableColumn="location" style="width:20%">
+            <div class="flex items-center gap-2">
+              Location
+              <p-sortIcon field="location"/>
+            </div>
+          </th>
+          <th pSortableColumn="active" style="width:5%">
+            <div class="flex items-center gap-2">
+              Active
+              <p-sortIcon field="active"/>
+            </div>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-client>
+        <tr>
+          <td>{{ client.fullName }}</td>
+          <td>{{ client.displayName }}</td>
+          <td>{{ client.email }}</td>
+          <td>{{ client.location }}</td>
+          <td>
+            <p-checkbox [(ngModel)]="client.active" [binary]="true" [readonly]="true"/>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+</div>

@@ -4,6 +4,10 @@ import {routes} from './app.routes';
 import {providePrimeNG} from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import {definePreset} from '@primeuix/themes';
+import {provideApi} from '../api';
+import {provideHttpClient} from '@angular/common/http';
+import {environment} from '../environments/environment';
+import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 
 const orangeAura = definePreset(Aura, {
   semantic: {
@@ -25,8 +29,13 @@ const orangeAura = definePreset(Aura, {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideHttpClient(),
+    provideApi({
+      basePath: environment.BASE_PATH_URL,
+    }),
     provideZoneChangeDetection({eventCoalescing: true}),
     provideRouter(routes),
+    provideAnimationsAsync(), //TODO FIND A NEW SOLUTION,
     providePrimeNG({
       theme: {
         preset: orangeAura

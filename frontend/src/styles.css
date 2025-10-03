@@ -2,3 +2,7 @@
 @import "tailwindcss";
 
 @plugin "tailwindcss-primeui";
+
+body {
+  margin: 16px;
+}
