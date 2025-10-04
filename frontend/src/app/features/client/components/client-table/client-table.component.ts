@@ -11,6 +11,9 @@ import {InputText} from 'primeng/inputtext';
 import {ClientDetailsComponent} from './client-details/client-details.component';
 import {ClientFacade} from '../../facade/client.facade';
 import {NewClientButtonComponent} from '../new-client/new-client-button/new-client-button.component';
+import {
+  ExportButtonComponent
+} from '../additional-options/export-button/export-button.component';
 
 @Component({
   selector: 'app-client-table',
@@ -25,7 +28,8 @@ import {NewClientButtonComponent} from '../new-client/new-client-button/new-clie
     IconField,
     InputText,
     ClientDetailsComponent,
-    NewClientButtonComponent
+    NewClientButtonComponent,
+    ExportButtonComponent
   ],
   templateUrl: './client-table.component.html',
   providers: [ClientFacade]

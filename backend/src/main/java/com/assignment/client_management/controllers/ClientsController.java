@@ -68,14 +68,6 @@ public class ClientsController {
         clientExportService.writeClientsAsCsv(clients, response.getWriter());
     }
 
-    private String escapeCsv(String field) {
-        if (field == null) return "";
-        if (field.contains(",") || field.contains("\"") || field.contains("\n")) {
-            return "\"" + field.replace("\"", "\"\"") + "\"";
-        }
-        return field;
-    }
-
     @ApiResponse(
             responseCode = "404",
             description = "Client not found.",

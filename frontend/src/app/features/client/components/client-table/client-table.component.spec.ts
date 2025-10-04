@@ -4,6 +4,7 @@ import {ClientFacade} from '../../facade/client.facade';
 import {ClientResponse, ClientsControllerService} from '../../../../../api';
 import {signal} from '@angular/core';
 import {MessageService} from 'primeng/api';
+import {HttpClient} from '@angular/common/http';
 
 describe('ClientTableComponent', () => {
   let spectator: Spectator<ClientTableComponent>;
@@ -38,7 +39,7 @@ describe('ClientTableComponent', () => {
 
   const createComponent = createComponentFactory({
     component: ClientTableComponent,
-    mocks: [ClientsControllerService, MessageService],
+    mocks: [ClientsControllerService, MessageService, HttpClient],
     componentProviders: [
       {provide: ClientFacade, useValue: mockFacade}
     ],
@@ -129,5 +130,17 @@ describe('ClientTableComponent', () => {
 
     const details = spectator.query('app-clients-details');
     expect(details).toBeTruthy();
+  });
+
+  it('should contain the export button component', () => {
+    spectator.detectChanges();
+    const exportButton = spectator.query('app-export-button');
+    expect(exportButton).toBeTruthy();
+  });
+
+  it('should contain the new client button component', () => {
+    spectator.detectChanges();
+    const newClientButton = spectator.query('app-new-client-button');
+    expect(newClientButton).toBeTruthy();
   });
 });

@@ -9,6 +9,7 @@
       <ng-template #caption>
 
         <div class="flex">
+          <app-export-button/>
           <app-new-client-button/>
           <p-iconfield iconPosition="left" class="ml-auto">
             <p-inputicon>
@@ -17,6 +18,7 @@
             <input pInputText type="text" (input)="filterTable($event.target.value)"
                    placeholder="Search clients"/>
           </p-iconfield>
+
         </div>
       </ng-template>
 
