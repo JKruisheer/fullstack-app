@@ -1,13 +1,3 @@
-    •	A high-level architecture overview.
-	•	The project setup instructions for both the frontend and backend.
-	•	Insights into the thought process during development.
-	•	Use of additional packages or libraries.
-	•	Potential future improvements.
-	•	Challenges faced and solutions implemented.
-	•	Example API usage and endpoints.
-
-
-
 ## High-Level Architecture Overview
 
 The application is structured as a full-stack solution with a clear separation between the frontend and backend:
@@ -44,6 +34,9 @@ production environment file and no build pipelines. To run the apps locally:
 
 - **Frontend**:
     - Run the command: `ng serve` or `npm run start`
+
+## Challenges faced
+I always wanted to use PrimeNG as a UI Library in an Angular project. However, I struggled with the 'complex' code that they provide for components and therefore also struggled with the component testing.
 
 ## Potential future improvements
     - the FE edit details page now gets the data from the table, however, the getClientById should be used.
