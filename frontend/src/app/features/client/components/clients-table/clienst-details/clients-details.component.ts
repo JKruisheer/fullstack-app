@@ -1,14 +1,14 @@
 import {Component, effect, inject, input, InputSignal, model, ModelSignal} from '@angular/core';
 import {Dialog} from 'primeng/dialog';
 import {Button} from 'primeng/button';
-import {ClientResponse, ClientsControllerService, PatchClientRequest} from '../../../../../../api';
+import {ClientResponse, ClientsControllerService, PatchClientRequest, Problem} from '../../../../../../api';
 import {Textarea} from 'primeng/textarea';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Checkbox} from 'primeng/checkbox';
 import {InputText} from 'primeng/inputtext';
 import {Message} from 'primeng/message';
 import {ClientFacade} from '../../../facade/client.facade';
-import {ConfirmationService} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {ConfirmPopup} from 'primeng/confirmpopup';
 
 export interface ClientDetailsForm {
@@ -38,6 +38,8 @@ export class ClientsDetailsComponent {
   private readonly clientFacade: ClientFacade = inject(ClientFacade);
   private readonly confirmationService: ConfirmationService = inject(ConfirmationService);
   private readonly clientsService: ClientsControllerService = inject(ClientsControllerService);
+  private readonly messageService: MessageService = inject(MessageService);
+
   clientDetailsVisible: ModelSignal<boolean> = model.required<boolean>();
   clientDetails: InputSignal<ClientResponse | undefined> = input.required<ClientResponse | undefined>();
 
@@ -81,12 +83,15 @@ export class ClientsDetailsComponent {
       next: () => {
         this.clientFacade.loadClients();
         this.clientDetailsVisible.set(false);
+      },
+      error: (err) => {
+        const problem = err.error as Problem;
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: problem.translation ?? "Unknown problem", key: 'bottom-right-toast', life: 5000 });
       }
-      //todo problem here
     })
   }
 
-  delete(event: Event) {
+  deleteClient(event: Event) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
       message: 'Are you sure that you want to delete this client?',
@@ -96,8 +101,9 @@ export class ClientsDetailsComponent {
             this.clientFacade.loadClients();
             this.clientDetailsVisible.set(false);
           },
-          error: () => {
-            //todo notification service probably
+          error: (err) => {
+            const problem = err.error as Problem;
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: problem.translation ?? "Unknown problem", key: 'bottom-right-toast', life: 5000 });
           }
         })
       }

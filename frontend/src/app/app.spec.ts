@@ -16,4 +16,12 @@ describe('App', () => {
     spectator = createComponent();
     expect(spectator.query('h1')?.textContent).toContain('Client management');
   });
+
+  it('should render a toast', () => {
+    spectator = createComponent();
+    const toast = spectator.query('p-toast');
+    expect(toast).toBeTruthy();
+    expect(toast?.getAttribute('key')).toBe('bottom-right-toast');
+    expect(toast?.getAttribute('position')).toBe('bottom-right');
+  });
 });

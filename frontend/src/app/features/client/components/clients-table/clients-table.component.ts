@@ -11,6 +11,7 @@ import {InputText} from 'primeng/inputtext';
 import {ClientsDetailsComponent} from './clienst-details/clients-details.component';
 import {ClientFacade} from '../../facade/client.facade';
 import {NewClientButtonComponent} from '../new-client/new-client-button/new-client-button.component';
+import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-clients-table',

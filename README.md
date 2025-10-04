@@ -6,6 +6,7 @@ ng linting
 spectator for easier testing
 primeng opensource FE framework
 Tailwindcss
+bit more consistency in the FE error handling
 
 # Backend
 springboot
