@@ -41,6 +41,7 @@ I always wanted to use PrimeNG as a UI Library in an Angular project. However, I
 ## Potential future improvements
     - the FE edit details page now gets the data from the table, however, the getClientById should be used.
     - The Frontend client table and client details is too complex and now has multiple responsibilities, that should be improved by using more smaller components.
+    - the export of the clients is now always csv, but that can be a request param with a certain format, then a factory can be used to create the correct format
 
 ## Example API Usage
 - Run the command: `mvn spring-boot:run -Dspring-boot.run.profiles=dev`
