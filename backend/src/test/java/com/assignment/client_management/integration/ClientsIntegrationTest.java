@@ -53,6 +53,8 @@ public class ClientsIntegrationTest {
         ClientResponse[] clients = response.getBody();
 
         assertEquals(0, clients.length);
+
+        verifyRaboClientsCookie(response, 0);
     }
 
     @Test
@@ -70,6 +72,16 @@ public class ClientsIntegrationTest {
         assertEquals(DETAILS, actual.details());
         assertEquals(ACTIVE, actual.active());
         assertEquals(LOCATION, actual.location());
+
+        verifyRaboClientsCookie(response, 1);
+    }
+
+    private void verifyRaboClientsCookie(ResponseEntity<ClientResponse[]> response, int clientCount) {
+        String setCookie = response.getHeaders().getFirst("Set-Cookie");
+        assertNotNull(setCookie);
+        assertTrue(setCookie.contains("RABO_CLIENTS=" + clientCount));
+        assertTrue(setCookie.contains("Path=/"));
+        assertTrue(setCookie.contains("Max-Age=86400"));
     }
 
     @Test

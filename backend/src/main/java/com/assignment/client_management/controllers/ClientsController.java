@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,21 +34,18 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ClientsController {
     private final ClientsService clientsService;
     private final ClientsControllerMapper clientsControllerMapper;
+    private final ClientCookieHandler clientCookieHandler;
 
-    public ClientsController(ClientsService clientsService, ClientsControllerMapper clientsControllerMapper) {
+    public ClientsController(ClientsService clientsService, ClientsControllerMapper clientsControllerMapper, ClientCookieHandler clientCookieHandler) {
         this.clientsService = clientsService;
         this.clientsControllerMapper = clientsControllerMapper;
+        this.clientCookieHandler = clientCookieHandler;
     }
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ClientResponse>> getClients(HttpServletResponse response) {
-        ResponseCookie cookie = ResponseCookie.from("myCookie", "someValue")
-                .httpOnly(false)
-                .secure(false)
-                .path("/")
-                .build();
-        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         List<ClientResponse> clientsResponse = clientsService.getClients().stream().map(clientsControllerMapper::toClientResponse).toList();
+        response.setHeader(HttpHeaders.SET_COOKIE, clientCookieHandler.buildResponseCookieString(clientsResponse.size()));
         return ResponseEntity.ok(clientsResponse);
     }
 

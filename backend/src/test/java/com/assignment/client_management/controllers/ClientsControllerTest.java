@@ -9,11 +9,13 @@ import com.assignment.client_management.services.ClientsService;
 import com.assignment.client_management.services.model.ClientInformation;
 import com.assignment.client_management.services.model.NewClient;
 import com.assignment.client_management.services.model.UpdateClientInformation;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -44,27 +46,37 @@ class ClientsControllerTest {
     @Mock
     private ClientsControllerMapper clientsControllerMapper;
 
+    @Mock
+    private ClientCookieHandler clientCookieHandler;
+
     @InjectMocks
     private ClientsController clientsController;
 
     @Test
-    void getClientsShouldReturnMappedClientResponse() {
+    void getClientsShouldReturnMappedClientResponseAndSetCookie() {
+        final int expectedClientCount = 1;
         ClientInformation mockedClientInformation = mock(ClientInformation.class);
         when(clientsService.getClients()).thenReturn(List.of(mockedClientInformation));
 
         ClientResponse mockedClientResponse = mock(ClientResponse.class);
         when(clientsControllerMapper.toClientResponse(mockedClientInformation)).thenReturn(mockedClientResponse);
 
-        ResponseEntity<List<ClientResponse>> actual = clientsController.getClients(any());
+        final String exceptedCookie = "expectedCookie";
+        HttpServletResponse mockedHttpServetResponse = mock(HttpServletResponse.class);
+
+        when(clientCookieHandler.buildResponseCookieString(expectedClientCount)).thenReturn(exceptedCookie);
+        ResponseEntity<List<ClientResponse>> actual = clientsController.getClients(mockedHttpServetResponse);
 
         assertEquals(OK, actual.getStatusCode());
 
         List<ClientResponse> response = actual.getBody();
-        assertEquals(1, response.size());
+        assertEquals(expectedClientCount, response.size());
         assertEquals(mockedClientResponse, response.get(0));
 
+        verify(mockedHttpServetResponse).setHeader(HttpHeaders.SET_COOKIE, exceptedCookie);
         verify(clientsService, times(1)).getClients();
         verify(clientsControllerMapper, times(1)).toClientResponse(mockedClientInformation);
+        verify(clientCookieHandler, times(1)).buildResponseCookieString(expectedClientCount);
     }
 
     @Test
