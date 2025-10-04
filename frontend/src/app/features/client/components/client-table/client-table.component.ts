@@ -8,13 +8,12 @@ import {FormsModule} from '@angular/forms';
 import {InputIcon} from 'primeng/inputicon';
 import {IconField} from 'primeng/iconfield';
 import {InputText} from 'primeng/inputtext';
-import {ClientsDetailsComponent} from './clienst-details/clients-details.component';
+import {ClientDetailsComponent} from './client-details/client-details.component';
 import {ClientFacade} from '../../facade/client.facade';
 import {NewClientButtonComponent} from '../new-client/new-client-button/new-client-button.component';
-import {MessageService} from 'primeng/api';
 
 @Component({
-  selector: 'app-clients-table',
+  selector: 'app-client-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ProgressSpinner,
@@ -25,13 +24,13 @@ import {MessageService} from 'primeng/api';
     InputIcon,
     IconField,
     InputText,
-    ClientsDetailsComponent,
+    ClientDetailsComponent,
     NewClientButtonComponent
   ],
-  templateUrl: './clients-table.component.html',
+  templateUrl: './client-table.component.html',
   providers: [ClientFacade]
 })
-export class ClientsTableComponent implements OnInit {
+export class ClientTableComponent implements OnInit {
   readonly clientFacade: ClientFacade = inject(ClientFacade)
 
   readonly filteredClientList: WritableSignal<ClientResponse[]> = signal([])

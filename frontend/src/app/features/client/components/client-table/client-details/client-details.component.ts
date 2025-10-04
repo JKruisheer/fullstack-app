@@ -31,10 +31,10 @@ export interface ClientDetailsForm {
     Message,
     ConfirmPopup
   ],
-  templateUrl: './clients-details.component.html',
+  templateUrl: './client-details.component.html',
   providers: [ConfirmationService]
 })
-export class ClientsDetailsComponent {
+export class ClientDetailsComponent {
   private readonly clientFacade: ClientFacade = inject(ClientFacade);
   private readonly confirmationService: ConfirmationService = inject(ConfirmationService);
   private readonly clientsService: ClientsControllerService = inject(ClientsControllerService);
@@ -86,7 +86,13 @@ export class ClientsDetailsComponent {
       },
       error: (err) => {
         const problem = err.error as Problem;
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: problem.translation ?? "Unknown problem", key: 'bottom-right-toast', life: 5000 });
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: problem.translation ?? "Unknown problem",
+          key: 'bottom-right-toast',
+          life: 5000
+        });
       }
     })
   }
@@ -103,7 +109,13 @@ export class ClientsDetailsComponent {
           },
           error: (err) => {
             const problem = err.error as Problem;
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: problem.translation ?? "Unknown problem", key: 'bottom-right-toast', life: 5000 });
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: problem.translation ?? "Unknown problem",
+              key: 'bottom-right-toast',
+              life: 5000
+            });
           }
         })
       }
