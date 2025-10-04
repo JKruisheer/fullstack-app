@@ -46,7 +46,7 @@ public class ClientsService {
 
     private void validateEmailOrThrow(String email) {
         clientsRepository.findByEmailIgnoreCase(email)
-                .ifPresent((entity) -> {
+                .ifPresent((_) -> {
                     throw new DataValidationException("This email is already used");
                 });
     }

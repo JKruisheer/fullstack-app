@@ -36,7 +36,7 @@ public class ClientsController {
     private final ClientsControllerMapper clientsControllerMapper;
     private final ClientCookieHandler clientCookieHandler;
 
-    public ClientsController(ClientsService clientsService, ClientsControllerMapper clientsControllerMapper, ClientCookieHandler clientCookieHandler) {
+    public ClientsController(final ClientsService clientsService, final ClientsControllerMapper clientsControllerMapper, final ClientCookieHandler clientCookieHandler) {
         this.clientsService = clientsService;
         this.clientsControllerMapper = clientsControllerMapper;
         this.clientCookieHandler = clientCookieHandler;
@@ -44,7 +44,7 @@ public class ClientsController {
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ClientResponse>> getClients(HttpServletResponse response) {
-        List<ClientResponse> clientsResponse = clientsService.getClients().stream().map(clientsControllerMapper::toClientResponse).toList();
+        final List<ClientResponse> clientsResponse = clientsService.getClients().stream().map(clientsControllerMapper::toClientResponse).toList();
         response.setHeader(HttpHeaders.SET_COOKIE, clientCookieHandler.buildResponseCookieString(clientsResponse.size()));
         return ResponseEntity.ok(clientsResponse);
     }
@@ -59,7 +59,7 @@ public class ClientsController {
     )
     @GetMapping(path = "/{id}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<ClientResponse> getClientById(@PathVariable("id") final Long id) {
-        ClientResponse clientResponse = clientsControllerMapper.toClientResponse(clientsService.getClientById(id));
+        final ClientResponse clientResponse = clientsControllerMapper.toClientResponse(clientsService.getClientById(id));
         return ResponseEntity.ok(clientResponse);
     }
 
@@ -88,7 +88,7 @@ public class ClientsController {
     @PostMapping
     public ResponseEntity<Void> createClient(@RequestBody final NewClientRequest newClientRequest) {
         validateNewClientRequest(newClientRequest);
-        Long id = clientsService.createClient(clientsControllerMapper.toNewClient(newClientRequest));
+        final Long id = clientsService.createClient(clientsControllerMapper.toNewClient(newClientRequest));
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
