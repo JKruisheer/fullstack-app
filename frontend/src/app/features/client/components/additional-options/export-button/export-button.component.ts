@@ -32,7 +32,7 @@ export class ExportButtonComponent {
         window.URL.revokeObjectURL(url);
         this.addSuccessMessage();
       },
-      error: (err) => {
+      error: () => {
         this.logErrorMessage();
       }
     })

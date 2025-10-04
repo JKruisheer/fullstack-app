@@ -47,3 +47,11 @@ I always wanted to use PrimeNG as a UI Library in an Angular project. However, I
 ## Example API Usage
 - Run the command: `mvn spring-boot:run -Dspring-boot.run.profiles=dev`
 - Go to the URL: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+
+## Additional features (How I would implement those)
+    - Data export: Started with that, have to finish the unit testing on the backend and implement a proper front end solution, see the potential future improvements for the xlsx.
+	- For the notifications I would use websockets, but also curious how HTTP2 works. That should work too.
+    - Data import: Spring batch processing
+    - Authentication & authorization: add keycloak and use springboot compose with a docker file to boot the keycloak during local development
+    - E2E testing: implement playwright in the FE. Which has nice features to click through your application and it makes test automatically.
+    - Save as draft: I would use the session storage for that.
