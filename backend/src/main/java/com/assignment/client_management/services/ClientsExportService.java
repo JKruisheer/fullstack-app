@@ -11,7 +11,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
 @Service
-public class ClientExportService {
+public class ClientsExportService {
 
     public void writeClientsAsCsv(List<ClientResponse> clients, PrintWriter writer) throws IOException {
         CSVFormat format = CSVFormat.DEFAULT.builder()
@@ -26,8 +26,8 @@ public class ClientExportService {
                         client.displayName(),
                         client.email(),
                         client.details(),
-                        client.location(),
-                        client.active()
+                        client.active(),
+                        client.location()
                 );
             }
         }

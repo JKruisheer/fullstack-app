@@ -7,7 +7,7 @@ import com.assignment.client_management.controllers.model.PatchClientRequest;
 import com.assignment.client_management.controllers.problems.Problem;
 import com.assignment.client_management.controllers.problems.UnknownClientProblem;
 import com.assignment.client_management.exceptions.DataInputException;
-import com.assignment.client_management.services.ClientExportService;
+import com.assignment.client_management.services.ClientsExportService;
 import com.assignment.client_management.services.ClientsService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URI;
 import java.util.List;
 
@@ -37,13 +36,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/clients")
 public class ClientsController {
     private final ClientsService clientsService;
-    private final ClientExportService clientExportService;
+    private final ClientsExportService clientsExportService;
     private final ClientsControllerMapper clientsControllerMapper;
     private final ClientCookieHandler clientCookieHandler;
 
-    public ClientsController(final ClientsService clientsService, final ClientExportService clientExportService, final ClientsControllerMapper clientsControllerMapper, final ClientCookieHandler clientCookieHandler) {
+    public ClientsController(final ClientsService clientsService, final ClientsExportService clientsExportService, final ClientsControllerMapper clientsControllerMapper, final ClientCookieHandler clientCookieHandler) {
         this.clientsService = clientsService;
-        this.clientExportService = clientExportService;
+        this.clientsExportService = clientsExportService;
         this.clientsControllerMapper = clientsControllerMapper;
         this.clientCookieHandler = clientCookieHandler;
     }
@@ -65,7 +64,7 @@ public class ClientsController {
                 .map(clientsControllerMapper::toClientResponse)
                 .toList();
 
-        clientExportService.writeClientsAsCsv(clients, response.getWriter());
+        clientsExportService.writeClientsAsCsv(clients, response.getWriter());
     }
 
     @ApiResponse(

@@ -27,7 +27,7 @@ public class ProblemHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Problem> handleGenericError(final Exception ex) {
+    public ResponseEntity<Problem> handleGenericException(final Exception ex) {
         Problem problem = new GenericProblem(ex.getMessage());
         return ResponseEntity.status(problem.getStatus()).body(problem);
     }

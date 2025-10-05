@@ -5,6 +5,7 @@ import com.assignment.client_management.controllers.model.ClientResponse;
 import com.assignment.client_management.controllers.model.NewClientRequest;
 import com.assignment.client_management.controllers.model.PatchClientRequest;
 import com.assignment.client_management.exceptions.DataInputException;
+import com.assignment.client_management.services.ClientsExportService;
 import com.assignment.client_management.services.ClientsService;
 import com.assignment.client_management.services.model.ClientInformation;
 import com.assignment.client_management.services.model.NewClient;
@@ -12,6 +13,7 @@ import com.assignment.client_management.services.model.UpdateClientInformation;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,13 +23,15 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -49,17 +53,17 @@ class ClientsControllerTest {
     @Mock
     private ClientCookieHandler clientCookieHandler;
 
+    @Mock
+    private ClientsExportService clientsExportService;
+
     @InjectMocks
     private ClientsController clientsController;
 
     @Test
     void getClientsShouldReturnMappedClientResponseAndSetCookie() {
         final int expectedClientCount = 1;
-        ClientInformation mockedClientInformation = mock(ClientInformation.class);
-        when(clientsService.getClients()).thenReturn(List.of(mockedClientInformation));
-
-        ClientResponse mockedClientResponse = mock(ClientResponse.class);
-        when(clientsControllerMapper.toClientResponse(mockedClientInformation)).thenReturn(mockedClientResponse);
+        final ClientInformation mockedClientInformation = mockClientInformation();
+        final ClientResponse mockedClientResponse = mockClientResponse(mockedClientInformation);
 
         final String exceptedCookie = "expectedCookie";
         HttpServletResponse mockedHttpServetResponse = mock(HttpServletResponse.class);
@@ -80,12 +84,32 @@ class ClientsControllerTest {
     }
 
     @Test
+    void exportClientShouldWriteClientsAsCsv() throws IOException {
+        final String expectedFileName = "filename";
+        final ClientInformation mockedClientInformation = mockClientInformation();
+        final ClientResponse mockedClientResponse = mockClientResponse(mockedClientInformation);
+
+        HttpServletResponse mockedHttpServetResponse = mock(HttpServletResponse.class);
+        PrintWriter mockedPrintWriter = mock(PrintWriter.class);
+        when(mockedHttpServetResponse.getWriter()).thenReturn(mockedPrintWriter);
+        clientsController.exportClients(mockedHttpServetResponse, expectedFileName);
+
+        verify(mockedHttpServetResponse).setHeader(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=%s.csv", expectedFileName));
+
+        ArgumentCaptor<List<ClientResponse>> captor = ArgumentCaptor.forClass(List.class);
+        verify(clientsExportService).writeClientsAsCsv(captor.capture(), eq(mockedPrintWriter));
+
+        List<ClientResponse> capturedClients = captor.getValue();
+        assertEquals(1, capturedClients.size());
+        assertEquals(mockedClientResponse, capturedClients.get(0));
+    }
+
+    @Test
     void getClientByIdShouldReturnMappedClientResponse() {
         ClientInformation mockedClientInformation = mock(ClientInformation.class);
         when(clientsService.getClientById(ID)).thenReturn(mockedClientInformation);
 
-        ClientResponse mockedClientResponse = mock(ClientResponse.class);
-        when(clientsControllerMapper.toClientResponse(mockedClientInformation)).thenReturn(mockedClientResponse);
+        ClientResponse mockedClientResponse = mockClientResponse(mockedClientInformation);
 
         ResponseEntity<ClientResponse> actual = clientsController.getClientById(ID);
 
@@ -95,6 +119,18 @@ class ClientsControllerTest {
 
         verify(clientsService, times(1)).getClientById(ID);
         verify(clientsControllerMapper, times(1)).toClientResponse(mockedClientInformation);
+    }
+
+    private ClientInformation mockClientInformation() {
+        ClientInformation mockedClientInformation = mock(ClientInformation.class);
+        when(clientsService.getClients()).thenReturn(List.of(mockedClientInformation));
+        return mockedClientInformation;
+    }
+
+    private ClientResponse mockClientResponse(ClientInformation mockedClientInformation) {
+        ClientResponse mockedClientResponse = mock(ClientResponse.class);
+        when(clientsControllerMapper.toClientResponse(mockedClientInformation)).thenReturn(mockedClientResponse);
+        return mockedClientResponse;
     }
 
     @Test
