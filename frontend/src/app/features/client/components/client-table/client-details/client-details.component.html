@@ -30,7 +30,8 @@
     </div>
   </form>
   <div class="flex justify-between gap-2 mt-4">
-    <p-button label="Close details" severity="secondary" (click)="clientDetailsVisible.set(false)"/>
+    <p-button label="Close details" severity="secondary" (click)="clientDetailsVisible.set(false)"
+              data-testid="CLOSE_DETAILS_BUTTON"/>
     <div class="flex gap-2">
       <p-confirmpopup #cp>
         <ng-template #headless let-message>
@@ -44,12 +45,14 @@
         </ng-template>
       </p-confirmpopup>
       <p-button
+        data-testid="DELETE_CLIENT_BUTTON"
         label="Delete"
         severity="danger"
         (click)="deleteClient($event)"
         icon="pi pi-trash"
       />
       <p-button
+        data-testid="EDIT_CLIENT_BUTTON"
         severity="success"
         label="Save client"
         icon="pi pi-save"

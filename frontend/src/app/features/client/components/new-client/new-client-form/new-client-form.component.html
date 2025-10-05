@@ -60,11 +60,12 @@
     </div>
 
     @if (saveClientErrorMessage(); as errorMessage) {
-      <p-message severity="error">{{ errorMessage }}</p-message>
+      <p-message data-testid="BACKEND_VALIDATION_ERROR" severity="error">{{ errorMessage }}</p-message>
     }
 
     <div class="flex justify-end mt-6">
       <p-button
+        data-testid="SAVE_CLIENT_FORM"
         label="Save"
         icon="pi pi-save"
         iconPos="left"
