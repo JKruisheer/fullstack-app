@@ -4,6 +4,8 @@ The application is structured as a full-stack solution with a clear separation b
 
 - **Frontend**:
     - Built with Angular 20, utilizing TypeScript for type safety and maintainability.
+        - **I know the assignment explicitly stated use angular 17, but Angular 17 is no longer supported. I therefore
+          used angular 20.**
     - Uses PrimeNG as the UI component library and TailwindCSS for utility-first styling.
     - OpenAPI is used to generate client code for API communication, ensuring strong typing and consistency.
     - Spectator is leveraged for simplified and robust component testing.
